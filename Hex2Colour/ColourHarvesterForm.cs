@@ -13,7 +13,7 @@ using System.Windows.Forms;
 
 namespace Hex2Colour
 {
-    public partial class ColourHarvester : Form
+    public partial class ColourHarvesterForm : Form
     {
         static readonly string[] commonNotations = new string[]
         {
@@ -29,7 +29,7 @@ namespace Hex2Colour
         };
 
 
-        public ColourHarvester()
+        public ColourHarvesterForm()
         {
             InitializeComponent();
             comboBox_Specifier.Items.AddRange(notations.ToArray());

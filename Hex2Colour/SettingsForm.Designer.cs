@@ -1,6 +1,6 @@
 ﻿namespace Hex2Colour
 {
-    partial class Hex2ColourSettings
+    partial class SettingsForm
     {
         /// <summary>
         /// Required designer variable.

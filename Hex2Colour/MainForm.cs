@@ -1,6 +1,7 @@
 ﻿#pragma warning disable CS8604 // Possible null reference argument.
 #pragma warning disable IDE0090 // Use 'new(...)'
 #pragma warning disable IDE1006 // Naming Styles
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Resources;
@@ -9,7 +10,7 @@ using static Hex2Colour.Settings;
 
 namespace Hex2Colour
 {
-    public partial class Hex2ColourForm : Form
+    public partial class MainForm : Form
     {
         #region Fields/Properties/Constants
 
@@ -68,19 +69,24 @@ namespace Hex2Colour
             }
         }
 
+
         /// <summary>
         /// Colour count for the current process, not including arrays.
         /// </summary>
         private int colourCount;
 
+        readonly string? spriteSheetGeneratorPath;
         #endregion
 
         #region Constructor
 
-        public Hex2ColourForm()
+        public MainForm()
         {
             InitializeComponent();
             LoadLastSettings();
+
+            spriteSheetGeneratorPath = Directory.EnumerateFiles(Environment.CurrentDirectory).FirstOrDefault(x => Path.GetFileName(x) == "SpriteSheetGenerator.exe");
+            spriteSheetGeneratorToolStripMenuItem.Enabled = spriteSheetGeneratorPath != null;
         }
 
         #endregion
@@ -192,10 +198,10 @@ namespace Hex2Colour
             string nameFmt = NameFormat != string.Empty && formatName ? NameFormat : "{0}";
 
             return string.Format(
-                nameFmt, 
-                name, 
+                nameFmt,
+                name,
                 !hasName ? string.Empty : index, //Use index if name already used
-                origColour, 
+                origColour,
                 colour);
         }
 
@@ -287,7 +293,7 @@ namespace Hex2Colour
 
 
 
-            if (result != string.Empty &&  Settings.AddToClipboard)
+            if (result != string.Empty && Settings.AddToClipboard)
             {
                 Clipboard.SetText(result);
             }
@@ -336,14 +342,14 @@ namespace Hex2Colour
         private void helpToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
-            Hex2ColourHelp help = new Hex2ColourHelp();
+            HelpForm help = new HelpForm();
             help.ShowDialog();
         }
 
 
         private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Hex2ColourSettings form = new Hex2ColourSettings(Settings);
+            SettingsForm form = new SettingsForm(Settings);
             //form.ApplySettings += ApplySettings;
             DialogResult result = form.ShowDialog();
 
@@ -392,9 +398,22 @@ namespace Hex2Colour
 
         }
 
-        private void webGrabberToolStripMenuItem_Click(object sender, EventArgs e)
+
+        private void spriteSheetGeneratorToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ColourHarvester grabber = new ColourHarvester();
+            try
+            {
+                Process.Start(spriteSheetGeneratorPath);
+            }
+            catch
+            {
+                spriteSheetGeneratorToolStripMenuItem.Enabled = false;
+            }
+        }
+
+        private void colourHarvestorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ColourHarvesterForm grabber = new ColourHarvesterForm();
 
             DialogResult result = grabber.ShowDialog();
 
@@ -516,8 +535,6 @@ namespace Hex2Colour
                 }
             }
         }
-
-
     }
 }
 #pragma warning restore CS8604 // Possible null reference argument.

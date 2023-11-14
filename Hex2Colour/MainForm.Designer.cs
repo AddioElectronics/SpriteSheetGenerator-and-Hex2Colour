@@ -1,7 +1,7 @@
 ﻿
 namespace Hex2Colour
 {
-    partial class Hex2ColourForm
+    partial class MainForm
     {
         /// <summary>
         ///  Required designer variable.
@@ -37,15 +37,17 @@ namespace Hex2Colour
             fileToolStripMenuItem = new ToolStripMenuItem();
             importSettingsToolStripMenuItem = new ToolStripMenuItem();
             closeToolStripMenuItem = new ToolStripMenuItem();
+            toolsToolStripMenuItem = new ToolStripMenuItem();
+            spriteSheetGeneratorToolStripMenuItem = new ToolStripMenuItem();
             settingsToolStripMenuItem = new ToolStripMenuItem();
             helpToolStripMenuItem = new ToolStripMenuItem();
-            colourHarvesterToolStripMenuItem = new ToolStripMenuItem();
             splitContainer = new SplitContainer();
             textBox_NameFormat = new TextBox();
             label_NameFormat = new Label();
             toolTip1 = new ToolTip(components);
             button_Append = new Button();
             button_Clear = new Button();
+            colourHarvestorToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer).BeginInit();
             splitContainer.Panel1.SuspendLayout();
@@ -84,7 +86,7 @@ namespace Hex2Colour
             // 
             // menuStrip1
             // 
-            menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, settingsToolStripMenuItem, helpToolStripMenuItem, colourHarvesterToolStripMenuItem });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, toolsToolStripMenuItem, settingsToolStripMenuItem, helpToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Size = new Size(942, 24);
@@ -101,16 +103,30 @@ namespace Hex2Colour
             // importSettingsToolStripMenuItem
             // 
             importSettingsToolStripMenuItem.Name = "importSettingsToolStripMenuItem";
-            importSettingsToolStripMenuItem.Size = new Size(155, 22);
+            importSettingsToolStripMenuItem.Size = new Size(180, 22);
             importSettingsToolStripMenuItem.Text = "Import Settings";
             importSettingsToolStripMenuItem.Click += importSettingsToolStripMenuItem_Click;
             // 
             // closeToolStripMenuItem
             // 
             closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            closeToolStripMenuItem.Size = new Size(155, 22);
+            closeToolStripMenuItem.Size = new Size(180, 22);
             closeToolStripMenuItem.Text = "Close";
             closeToolStripMenuItem.Click += closeToolStripMenuItem_Click;
+            // 
+            // toolsToolStripMenuItem
+            // 
+            toolsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { colourHarvestorToolStripMenuItem, spriteSheetGeneratorToolStripMenuItem });
+            toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
+            toolsToolStripMenuItem.Size = new Size(46, 20);
+            toolsToolStripMenuItem.Text = "Tools";
+            // 
+            // spriteSheetGeneratorToolStripMenuItem
+            // 
+            spriteSheetGeneratorToolStripMenuItem.Name = "spriteSheetGeneratorToolStripMenuItem";
+            spriteSheetGeneratorToolStripMenuItem.Size = new Size(191, 22);
+            spriteSheetGeneratorToolStripMenuItem.Text = "Sprite Sheet Generator";
+            spriteSheetGeneratorToolStripMenuItem.Click += spriteSheetGeneratorToolStripMenuItem_Click;
             // 
             // settingsToolStripMenuItem
             // 
@@ -125,14 +141,6 @@ namespace Hex2Colour
             helpToolStripMenuItem.Size = new Size(44, 20);
             helpToolStripMenuItem.Text = "Help";
             helpToolStripMenuItem.Click += helpToolStripMenuItem_Click;
-            // 
-            // colourHarvesterToolStripMenuItem
-            // 
-            colourHarvesterToolStripMenuItem.Alignment = ToolStripItemAlignment.Right;
-            colourHarvesterToolStripMenuItem.Name = "colourHarvesterToolStripMenuItem";
-            colourHarvesterToolStripMenuItem.Size = new Size(108, 20);
-            colourHarvesterToolStripMenuItem.Text = "Colour Harvester";
-            colourHarvesterToolStripMenuItem.Click += webGrabberToolStripMenuItem_Click;
             // 
             // splitContainer
             // 
@@ -193,7 +201,14 @@ namespace Hex2Colour
             button_Clear.UseVisualStyleBackColor = true;
             button_Clear.Click += button_Clear_Click;
             // 
-            // Hex2ColourForm
+            // colourHarvestorToolStripMenuItem
+            // 
+            colourHarvestorToolStripMenuItem.Name = "colourHarvestorToolStripMenuItem";
+            colourHarvestorToolStripMenuItem.Size = new Size(191, 22);
+            colourHarvestorToolStripMenuItem.Text = "Colour Harvestor";
+            colourHarvestorToolStripMenuItem.Click += colourHarvestorToolStripMenuItem_Click;
+            // 
+            // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -206,7 +221,7 @@ namespace Hex2Colour
             Controls.Add(button_Convert);
             Controls.Add(menuStrip1);
             MinimumSize = new Size(550, 300);
-            Name = "Hex2ColourForm";
+            Name = "MainForm";
             ShowIcon = false;
             Text = "Hex2Colour";
             FormClosing += Hex2ColourForm_FormClosing;
@@ -239,7 +254,9 @@ namespace Hex2Colour
         private ToolStripMenuItem importSettingsToolStripMenuItem;
         private ToolStripMenuItem closeToolStripMenuItem;
         private Button button_Clear;
-        private ToolStripMenuItem colourHarvesterToolStripMenuItem;
+        private ToolStripMenuItem toolsToolStripMenuItem;
+        private ToolStripMenuItem spriteSheetGeneratorToolStripMenuItem;
+        private ToolStripMenuItem colourHarvestorToolStripMenuItem;
     }
 }
 

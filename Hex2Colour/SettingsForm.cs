@@ -11,7 +11,7 @@ using static Hex2Colour.Settings;
 
 namespace Hex2Colour
 {
-    public partial class Hex2ColourSettings : Form
+    public partial class SettingsForm : Form
     {
         #region Delegates
         /// <summary>
@@ -62,7 +62,7 @@ namespace Hex2Colour
 
         #region Constructors
 
-        public Hex2ColourSettings()
+        public SettingsForm()
         {
             InitializeComponent();
             comboBox_Language.Items.AddRange(langs.Keys.ToArray());
@@ -70,7 +70,7 @@ namespace Hex2Colour
             comboBox_Language.SelectedIndexChanged += comboBox_Language_SelectedIndexChanged;
         }
 
-        public Hex2ColourSettings(Settings settings) : this()
+        public SettingsForm(Settings settings) : this()
         {
             Value = (Settings)settings.Clone();
             _original = (Settings)settings.Clone();
@@ -206,7 +206,8 @@ namespace Hex2Colour
 
                     if (random.Next(100) >= 97)
                     {
-                        Stream stream = Resource.changelanguage;
+                        //Just a joke! Dont take it personally
+                        Stream stream = Resource.easteregg;
                         System.Media.SoundPlayer sound = new System.Media.SoundPlayer(stream);
                         sound.Play();
                     }

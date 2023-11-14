@@ -1,6 +1,6 @@
 ﻿namespace Hex2Colour
 {
-    partial class ColourHarvester
+    partial class ColourHarvesterForm
     {
         /// <summary>
         /// Required designer variable.

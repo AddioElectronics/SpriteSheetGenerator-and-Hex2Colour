@@ -1,8 +1,8 @@
 ﻿namespace Hex2Colour
 {
-    public partial class Hex2ColourHelp : Form
+    public partial class HelpForm : Form
     {
-        public Hex2ColourHelp()
+        public HelpForm()
         {
             InitializeComponent();
         }

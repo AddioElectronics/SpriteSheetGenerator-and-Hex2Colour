@@ -1,6 +1,6 @@
 ﻿namespace Hex2Colour
 {
-    partial class Hex2ColourHelp
+    partial class HelpForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Hex2ColourHelp));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(HelpForm));
             label_ContentGeneral = new Label();
             textBox1 = new TextBox();
             textBox2 = new TextBox();

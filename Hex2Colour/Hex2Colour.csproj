@@ -6,16 +6,41 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
+    <Authors>Addio</Authors>
+    <PackageProjectUrl>https://github.com/AddioElectronics/SpriteSheetGenerator</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/AddioElectronics/SpriteSheetGenerator</RepositoryUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <BaseOutputPath>..\bin\</BaseOutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DebugType>embedded</DebugType>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Update="Hex2ColourForm.cs">
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\SpriteSheetGenerator\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Hex2ColourHelp.cs">
+    <Compile Update="HelpForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Hex2ColourSettings.cs">
+    <Compile Update="SettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="Resource.Designer.cs">

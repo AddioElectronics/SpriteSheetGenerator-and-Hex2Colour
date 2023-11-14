@@ -63,9 +63,9 @@ namespace Hex2Colour {
         /// <summary>
         ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
         /// </summary>
-        internal static System.IO.UnmanagedMemoryStream changelanguage {
+        internal static System.IO.UnmanagedMemoryStream easteregg {
             get {
-                return ResourceManager.GetStream("changelanguage", resourceCulture);
+                return ResourceManager.GetStream("easteregg", resourceCulture);
             }
         }
     }
