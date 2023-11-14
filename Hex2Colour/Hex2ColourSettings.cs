@@ -81,11 +81,13 @@ namespace Hex2Colour
 
         void SetControls(Settings settings)
         {
+            comboBox_Language.SelectedIndex = (int)settings.LangApi;
             checkBox_AlphaMSB.Checked = settings.AlphaMSB;
             checkBox_Clipboard.Checked = settings.AddToClipboard;
             checkBox_Murica.Checked = settings.AmericanSpelling;
             checkBox_SwapEndian.Checked = settings.SwapEndianess;
-            comboBox_Language.SelectedIndex = (int)settings.LangApi;
+            checkBox_GenerateArrays.Checked = settings.GenerateArrays;
+            checkBox_AlwaysFormatName.Checked = settings.AlwaysFormatName;
             textBox_NameFormat.Text = settings.NameFormat;
         }
 
@@ -209,6 +211,14 @@ namespace Hex2Colour
                         sound.Play();
                     }
                 }
+            }
+            else if (sender == checkBox_GenerateArrays)
+            {
+                Value.GenerateArrays = checkBox_GenerateArrays.Checked;
+            }
+            else if (sender == checkBox_AlwaysFormatName)
+            {
+                Value.AlwaysFormatName = checkBox_AlwaysFormatName.Checked;
             }
         }
 

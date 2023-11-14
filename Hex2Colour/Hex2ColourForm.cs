@@ -4,6 +4,7 @@
 using System.Drawing;
 using System.Globalization;
 using System.Resources;
+using System.Text.RegularExpressions;
 using static Hex2Colour.Settings;
 
 namespace Hex2Colour
@@ -18,18 +19,31 @@ namespace Hex2Colour
         public const string fmtCSHARP = "Color {0} = Color.FromArgb(0x{1:X6})";
         private const string settingsFilename = "settings" + Settings.EXTENSION;
 
+
+        static readonly string[] newLines = new string[]
+        {
+            "\r\n",
+            "\r",
+            "\n",
+        };
+
         public static readonly Dictionary<LangsApis, string> formats = new Dictionary<LangsApis, string>()
         {
             {LangsApis.C_GDI, fmtGDI},
             {LangsApis.CSHARP_SYSDRAW,  fmtCSHARP}
         };
 
+
         public string ColourString => Settings.AmericanSpelling ? americanColour : canadianColour;
         public string DefaultNameFormat => ColourString + "{0}";
 
-        public Settings Settings { get; set; }
+        public static Settings Settings { get; set; }
 
-        private LangsApis LangApi => Settings.LangApi;
+        static LangsApis LangApi => Settings.LangApi;
+
+        static bool GenerateArrays => Settings.GenerateArrays;
+
+        static bool AlwaysFormatName => Settings.AlwaysFormatName;
 
         public string NameFormat
         {
@@ -53,6 +67,11 @@ namespace Hex2Colour
                 }
             }
         }
+
+        /// <summary>
+        /// Colour count for the current process, not including arrays.
+        /// </summary>
+        private int colourCount;
 
         #endregion
 
@@ -97,8 +116,8 @@ namespace Hex2Colour
                 {
                     Settings? settings = Settings.Load(settingsFilename);
 
-                    //Only save if different
-                    if (settings != Settings)
+                    //No changes
+                    if (settings == Settings)
                         return;
                 }
             }
@@ -143,26 +162,90 @@ namespace Hex2Colour
             return null;
         }
 
+        bool IsEmptyLine(string line)
+        {
+            Regex regex = new Regex("^\\s*$");
+            return regex.IsMatch(line);
+        }
+
+        string FormatName(object name, int index, uint colour, uint origColour)
+        {
+            bool formatName = true;
+            bool hasName = false;   //False will be replaced with index
+
+            if (name.GetType() == typeof(string))
+            {
+                hasName = true;
+                string sname = (string)name;
+                char first = (sname)[0];
+
+                //Check Format symbols
+                if ((!AlwaysFormatName && first != '%') ||
+                    (AlwaysFormatName && first == '!'))
+                    formatName = false;
+
+                //Remove format symbol
+                if (first == '!' || first == '%')
+                    name = sname.Substring(1);
+            }
+
+            string nameFmt = NameFormat != string.Empty && formatName ? NameFormat : "{0}";
+
+            return string.Format(
+                nameFmt, 
+                name, 
+                !hasName ? string.Empty : index, //Use index if name already used
+                origColour, 
+                colour);
+        }
+
         private bool ParseLine(string line, int index, out uint colour, out string? name, out string? comment)
         {
             string[] lsplit = line.Split(' ');
+
+            //Skip line
+            if (IsEmptyLine(line))
+            {
+                //Array has ended, unless a new array is defined, colours will be created normally.
+                ArrayGenerator.currentArray = null;
+                goto ReturnFalse;
+            }
+
             uint? col = ParseValue(lsplit[0], out uint origColour);
 
             if (col == null)
             {
-                name = null;
-                comment = null;
-                colour = 0;
-                return false;
+                if (GenerateArrays)
+                {
+                    //Start new array.
+                    string arrayName = lsplit[0];
+                    ArrayGenerator.StartArray(arrayName);
+                }
+
+                goto ReturnFalse;
             }
 
-            object nameObj = lsplit.Length > 1 ? lsplit[1] : index;
-            string nameFmt = NameFormat != string.Empty ? NameFormat : "{0}";
+            if (GenerateArrays && ArrayGenerator.currentArray != null)
+            {
+                colour = col.Value;
+                comment = lsplit.Length > 1 ? string.Join(' ', lsplit.Skip(1)) : null;
+                //Colour is added to array
+                ArrayGenerator.AddColour(colour, comment);
+                name = null;
+                return true;
+            }
 
             colour = col.Value;
-            name = string.Format(nameFmt, nameObj, lsplit.Length == 1 ? string.Empty : index, origColour, colour);
-            comment = lsplit.Length > 2 ? string.Join(' ', lsplit.Skip(2)) : null;
+            object nameObj = lsplit.Length > 1 && lsplit[1] != "$" ? lsplit[1] : index; //If name null or $ use index
+            name = FormatName(nameObj, index, colour, origColour);                      //Format name
+            comment = lsplit.Length > 2 ? string.Join(' ', lsplit.Skip(2)) : null;      //Add comment
             return true;
+
+        ReturnFalse:
+            name = null;
+            comment = null;
+            colour = 0;
+            return false;
         }
 
         private string FormatCode(LangsApis lang, string name, uint colour, string? comment)
@@ -172,23 +255,39 @@ namespace Hex2Colour
 
         private string ConvertStings()
         {
+            ArrayGenerator.Clear();
             string[] lines = textIn.Text.Split("\r\n");
 
             List<string> values = new List<string>();
 
+
             for (int i = 0; i < lines.Length; i++)
             {
-                if (ParseLine(lines[i], i, out uint colour, out string? name, out string? comment))
+                if (ParseLine(lines[i], colourCount, out uint colour, out string? name, out string? comment))
                 {
+                    if (GenerateArrays && ArrayGenerator.currentArray != null)
+                    {
+                        //Was added to array.
+                        continue;
+                    }
+
                     string code = FormatCode(LangApi, name, colour, comment);
                     values.Add(code);
+                    colourCount++;
                 }
             }
 
             string result = string.Empty;
             values.ForEach(x => result += x);
 
-            if (Settings.AddToClipboard)
+            if (GenerateArrays && ArrayGenerator.arrays.Count > 0)
+            {
+                result += "\r\n\r\n" + ArrayGenerator.GenerateAllArrays();
+            }
+
+
+
+            if (result != string.Empty &&  Settings.AddToClipboard)
             {
                 Clipboard.SetText(result);
             }
@@ -223,9 +322,9 @@ namespace Hex2Colour
 
         private void button_Convert_Click(object sender, EventArgs e)
         {
+            colourCount = 0;
             string code = ConvertStings();
             textOut.Text = code;
-
         }
 
         private void button_Append_Click(object sender, EventArgs e)
@@ -303,10 +402,120 @@ namespace Hex2Colour
                 return;
 
 
-
+            string joined = string.Join("\r\n", grabber.GrabbedStrings);
+            textIn.Text = joined;
         }
 
         #endregion
+
+        //10 minute array generator
+        static class ArrayGenerator
+        {
+            public const string fmtGDIArray = "const COLORREF {0}[] = \r\n{{";
+            public const string fmtGDIItem = "\t0x{0:X6}";
+            public const string fmtCSHARPArray = "Color[] {0} = new Color[]\r\n{{";
+            public const string fmtCSHARPItem = "\tColor.FromArgb(0x{0:X6})";
+
+            public static List<ColourArray> arrays = new List<ColourArray>();
+
+            public static ColourArray? currentArray;
+
+            public static readonly Dictionary<LangsApis, string> arrayStartFormats = new Dictionary<LangsApis, string>()
+            {
+                {LangsApis.C_GDI, fmtGDIArray},
+                {LangsApis.CSHARP_SYSDRAW,  fmtCSHARPArray}
+            };
+
+            public static readonly Dictionary<LangsApis, string> arrayItemFormats = new Dictionary<LangsApis, string>()
+            {
+                {LangsApis.C_GDI, fmtGDIItem},
+                {LangsApis.CSHARP_SYSDRAW,  fmtCSHARPItem}
+            };
+
+            public static void Clear()
+            {
+                arrays.Clear();
+            }
+
+            public static void StartArray(string name)
+            {
+                ColourArray arr = new ColourArray(name);
+                arrays.Add(arr);
+                currentArray = arr;
+            }
+
+            public static void AddColour(uint colour, string? comment)
+            {
+                if (currentArray == null)
+                    throw new NullReferenceException("This should not be null when here");
+
+                ArrayItem item = new ArrayItem()
+                {
+                    colour = colour,
+                    comment = comment
+                };
+
+                currentArray.items.Add(item);
+            }
+
+            public static string? GenerateAllArrays()
+            {
+                if (arrays.Count == 0)
+                    return null;
+
+                return string.Join("\r\n", arrays.Select(x => x.Generate()));
+            }
+
+
+            public class ArrayItem
+            {
+                public uint colour;
+                public string? comment;
+            }
+
+            public class ColourArray
+            {
+
+                public List<ArrayItem> items = new List<ArrayItem>();
+
+                public string name;
+
+                public ColourArray(string name)
+                {
+                    this.name = name;
+                }
+
+                static string FormatArrayStart(string name, LangsApis lang)
+                {
+                    return string.Format(arrayStartFormats[lang], name);
+                }
+
+                static string FormatItem(uint colour, LangsApis lang, string? comment)
+                {
+                    string formatted = string.Format(arrayItemFormats[lang], colour) + ",";
+
+                    //Add comment if exists
+                    if (comment != null)
+                        formatted += $"\t//{comment}";
+
+                    return formatted;
+                }
+
+                public string Generate()
+                {
+                    //Return empty because it will probably get used in string.join
+                    if (items.Count == 0)
+                        return string.Empty;
+
+                    string start = FormatArrayStart(name, LangApi);
+                    string formattedItems = string.Join("\r\n", items.Select(x => FormatItem(x.colour, LangApi, x.comment)));
+                    string end = "\r\n};\r\n\r\n";
+
+                    return string.Join("", start, formattedItems, end);
+
+                }
+            }
+        }
 
 
     }

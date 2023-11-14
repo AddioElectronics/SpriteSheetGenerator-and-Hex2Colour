@@ -141,4 +141,38 @@ Formatters
 {2} Colour value before endianess swap
 {3} True colour value (After endianess swap)</value>
   </data>
+  <data name="richTextBox2.Text" xml:space="preserve">
+    <value>You may not want to have a format infront of some of the names,
+or the opposite and only want to select which names are formatted.
+So 2 symbols and the option AlwaysFormatNames was added, 
+to give both options.
+
+The 2 symbols are...
+
+%	: Causes a name to be formatted
+!	: Stops a name from being formatted</value>
+  </data>
+  <data name="textBox10.Text" xml:space="preserve">
+    <value>const COLORREF Green = 0x00FF00;
+const COLORREF Blue = 0xFF0000;
+
+const COLORREF RedArray[] = {
+	0x0000FF,
+	0x0000FF,
+	0x0000FF,
+};
+
+const COLORREF Another[] = {
+	0x0000FF,
+	0x0000FF,
+	0x0000FF,
+};
+</value>
+  </data>
+  <data name="richTextBox3.Text" xml:space="preserve">
+    <value>To format a block of colours as an array, all you need to do is type a name on its own line above the colour
+you want to start the array at.
+Every line below until the next empty line will be added to the array.
+After the empty line, you can either define another array, or add colours like normal.</value>
+  </data>
 </root>

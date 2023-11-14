@@ -45,6 +45,8 @@
             okTStripMenuItem = new ToolStripMenuItem();
             applyToolStripMenuItem = new ToolStripMenuItem();
             cancelToolStripMenuItem = new ToolStripMenuItem();
+            checkBox_GenerateArrays = new CheckBox();
+            checkBox_AlwaysFormatName = new CheckBox();
             menuStrip.SuspendLayout();
             SuspendLayout();
             // 
@@ -98,8 +100,9 @@
             // 
             // label_Language
             // 
+            label_Language.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             label_Language.AutoSize = true;
-            label_Language.Location = new Point(11, 142);
+            label_Language.Location = new Point(11, 187);
             label_Language.Name = "label_Language";
             label_Language.Size = new Size(82, 15);
             label_Language.TabIndex = 16;
@@ -107,17 +110,19 @@
             // 
             // comboBox_Language
             // 
+            comboBox_Language.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             comboBox_Language.DropDownStyle = ComboBoxStyle.DropDownList;
             comboBox_Language.FormattingEnabled = true;
-            comboBox_Language.Location = new Point(11, 160);
+            comboBox_Language.Location = new Point(11, 205);
             comboBox_Language.Name = "comboBox_Language";
             comboBox_Language.Size = new Size(121, 23);
             comboBox_Language.TabIndex = 15;
             // 
             // label_NameFormat
             // 
+            label_NameFormat.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             label_NameFormat.AutoSize = true;
-            label_NameFormat.Location = new Point(11, 192);
+            label_NameFormat.Location = new Point(11, 237);
             label_NameFormat.Name = "label_NameFormat";
             label_NameFormat.Size = new Size(80, 15);
             label_NameFormat.TabIndex = 25;
@@ -125,7 +130,8 @@
             // 
             // textBox_NameFormat
             // 
-            textBox_NameFormat.Location = new Point(11, 210);
+            textBox_NameFormat.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            textBox_NameFormat.Location = new Point(11, 255);
             textBox_NameFormat.Name = "textBox_NameFormat";
             textBox_NameFormat.PlaceholderText = "Ex. g_colour{0}";
             textBox_NameFormat.Size = new Size(210, 23);
@@ -198,11 +204,40 @@
             cancelToolStripMenuItem.Text = "Cancel";
             cancelToolStripMenuItem.Click += cancelToolStripMenuItem_Click;
             // 
+            // checkBox_GenerateArrays
+            // 
+            checkBox_GenerateArrays.AutoSize = true;
+            checkBox_GenerateArrays.Checked = true;
+            checkBox_GenerateArrays.CheckState = CheckState.Checked;
+            checkBox_GenerateArrays.Enabled = false;
+            checkBox_GenerateArrays.Location = new Point(11, 134);
+            checkBox_GenerateArrays.Name = "checkBox_GenerateArrays";
+            checkBox_GenerateArrays.Size = new Size(109, 19);
+            checkBox_GenerateArrays.TabIndex = 27;
+            checkBox_GenerateArrays.Text = "Generate Arrays";
+            checkBox_GenerateArrays.UseVisualStyleBackColor = true;
+            checkBox_GenerateArrays.CheckedChanged += checkBox_CheckedChanged;
+            // 
+            // checkBox_AlwaysFormatName
+            // 
+            checkBox_AlwaysFormatName.AutoSize = true;
+            checkBox_AlwaysFormatName.Checked = true;
+            checkBox_AlwaysFormatName.CheckState = CheckState.Checked;
+            checkBox_AlwaysFormatName.Location = new Point(11, 159);
+            checkBox_AlwaysFormatName.Name = "checkBox_AlwaysFormatName";
+            checkBox_AlwaysFormatName.Size = new Size(139, 19);
+            checkBox_AlwaysFormatName.TabIndex = 28;
+            checkBox_AlwaysFormatName.Text = "Always Format Name";
+            checkBox_AlwaysFormatName.UseVisualStyleBackColor = true;
+            checkBox_AlwaysFormatName.CheckedChanged += checkBox_CheckedChanged;
+            // 
             // Hex2ColourSettings
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(246, 245);
+            ClientSize = new Size(246, 290);
+            Controls.Add(checkBox_AlwaysFormatName);
+            Controls.Add(checkBox_GenerateArrays);
             Controls.Add(label_NameFormat);
             Controls.Add(textBox_NameFormat);
             Controls.Add(checkBox_Murica);
@@ -213,7 +248,7 @@
             Controls.Add(comboBox_Language);
             Controls.Add(menuStrip);
             MaximizeBox = false;
-            MaximumSize = new Size(262, 284);
+            MaximumSize = new Size(262, 329);
             MinimizeBox = false;
             MinimumSize = new Size(262, 284);
             Name = "Hex2ColourSettings";
@@ -243,5 +278,7 @@
         private ToolStripMenuItem applyToolStripMenuItem;
         private ToolStripMenuItem cancelToolStripMenuItem;
         private ToolStripMenuItem okTStripMenuItem;
+        private CheckBox checkBox_GenerateArrays;
+        private CheckBox checkBox_AlwaysFormatName;
     }
 }

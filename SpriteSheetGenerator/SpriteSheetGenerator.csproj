@@ -8,4 +8,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Hex2Colour\Hex2Colour.csproj" />
+  </ItemGroup>
+
 </Project>

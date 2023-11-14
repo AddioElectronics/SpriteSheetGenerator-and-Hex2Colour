@@ -36,13 +36,24 @@
             General = new TabPage();
             button_Convert = new Button();
             NameFormat = new TabPage();
-            richTextBox1 = new RichTextBox();
             textBox4 = new TextBox();
             textBox5 = new TextBox();
             textBox3 = new TextBox();
+            richTextBox1 = new RichTextBox();
+            NameFormat2 = new TabPage();
+            textBox6 = new TextBox();
+            textBox7 = new TextBox();
+            textBox8 = new TextBox();
+            richTextBox2 = new RichTextBox();
+            Arrays = new TabPage();
+            textBox9 = new TextBox();
+            textBox10 = new TextBox();
+            richTextBox3 = new RichTextBox();
             tabControl.SuspendLayout();
             General.SuspendLayout();
             NameFormat.SuspendLayout();
+            NameFormat2.SuspendLayout();
+            Arrays.SuspendLayout();
             SuspendLayout();
             // 
             // label_ContentGeneral
@@ -56,11 +67,11 @@
             // textBox1
             // 
             textBox1.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            textBox1.Location = new Point(243, 172);
+            textBox1.Location = new Point(317, 172);
             textBox1.Multiline = true;
             textBox1.Name = "textBox1";
             textBox1.ReadOnly = true;
-            textBox1.Size = new Size(224, 126);
+            textBox1.Size = new Size(308, 126);
             textBox1.TabIndex = 2;
             textBox1.Text = "const COLORREF colour1 = 0xFF;\r\nconst COLORREF colourRed = 0xFF;\r\nconst COLORREF colourGreen = 0xFF0000;\r\nconst COLORREF colourGreen2 = 0x43A96D; //For grass\r\n";
             // 
@@ -71,7 +82,7 @@
             textBox2.Multiline = true;
             textBox2.Name = "textBox2";
             textBox2.ReadOnly = true;
-            textBox2.Size = new Size(224, 126);
+            textBox2.Size = new Size(308, 126);
             textBox2.TabIndex = 3;
             textBox2.Text = "FF0000\r\n0xFF0000 colourRed\r\n0xFF colourGreen\r\n6DA943 colourGreen2 Grass like colour\r\n";
             // 
@@ -79,11 +90,13 @@
             // 
             tabControl.Controls.Add(General);
             tabControl.Controls.Add(NameFormat);
+            tabControl.Controls.Add(NameFormat2);
+            tabControl.Controls.Add(Arrays);
             tabControl.Dock = DockStyle.Fill;
             tabControl.Location = new Point(0, 0);
             tabControl.Name = "tabControl";
             tabControl.SelectedIndex = 0;
-            tabControl.Size = new Size(484, 361);
+            tabControl.Size = new Size(636, 361);
             tabControl.TabIndex = 4;
             // 
             // General
@@ -95,7 +108,7 @@
             General.Location = new Point(4, 24);
             General.Name = "General";
             General.Padding = new Padding(3);
-            General.Size = new Size(476, 333);
+            General.Size = new Size(628, 333);
             General.TabIndex = 0;
             General.Text = "General";
             General.UseVisualStyleBackColor = true;
@@ -119,10 +132,42 @@
             NameFormat.Location = new Point(4, 24);
             NameFormat.Name = "NameFormat";
             NameFormat.Padding = new Padding(3);
-            NameFormat.Size = new Size(476, 333);
+            NameFormat.Size = new Size(628, 333);
             NameFormat.TabIndex = 2;
             NameFormat.Text = "Name Format";
             NameFormat.UseVisualStyleBackColor = true;
+            // 
+            // textBox4
+            // 
+            textBox4.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            textBox4.Location = new Point(3, 178);
+            textBox4.Multiline = true;
+            textBox4.Name = "textBox4";
+            textBox4.ReadOnly = true;
+            textBox4.Size = new Size(308, 126);
+            textBox4.TabIndex = 5;
+            textBox4.Text = "FF0000 Red\r\n00FF00";
+            // 
+            // textBox5
+            // 
+            textBox5.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            textBox5.Location = new Point(317, 178);
+            textBox5.Multiline = true;
+            textBox5.Name = "textBox5";
+            textBox5.ReadOnly = true;
+            textBox5.Size = new Size(308, 126);
+            textBox5.TabIndex = 4;
+            textBox5.Text = "const COLORREF g_colourRed = 0x0000FF;\r\nconst COLORREF g_colour1 = 0x00FF00;";
+            // 
+            // textBox3
+            // 
+            textBox3.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            textBox3.Location = new Point(525, 149);
+            textBox3.Name = "textBox3";
+            textBox3.ReadOnly = true;
+            textBox3.Size = new Size(100, 23);
+            textBox3.TabIndex = 2;
+            textBox3.Text = "g_colour{0}";
             // 
             // richTextBox1
             // 
@@ -134,46 +179,115 @@
             richTextBox1.TabIndex = 6;
             richTextBox1.Text = resources.GetString("richTextBox1.Text");
             // 
-            // textBox4
+            // NameFormat2
             // 
-            textBox4.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            textBox4.Location = new Point(3, 178);
-            textBox4.Multiline = true;
-            textBox4.Name = "textBox4";
-            textBox4.ReadOnly = true;
-            textBox4.Size = new Size(224, 149);
-            textBox4.TabIndex = 5;
-            textBox4.Text = "FF0000 Red\r\n00FF00";
+            NameFormat2.Controls.Add(textBox6);
+            NameFormat2.Controls.Add(textBox7);
+            NameFormat2.Controls.Add(textBox8);
+            NameFormat2.Controls.Add(richTextBox2);
+            NameFormat2.Location = new Point(4, 24);
+            NameFormat2.Name = "NameFormat2";
+            NameFormat2.Padding = new Padding(3);
+            NameFormat2.Size = new Size(628, 333);
+            NameFormat2.TabIndex = 3;
+            NameFormat2.Text = "Name Symbols";
+            NameFormat2.UseVisualStyleBackColor = true;
             // 
-            // textBox5
+            // textBox6
             // 
-            textBox5.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            textBox5.Location = new Point(243, 178);
-            textBox5.Multiline = true;
-            textBox5.Name = "textBox5";
-            textBox5.ReadOnly = true;
-            textBox5.Size = new Size(224, 149);
-            textBox5.TabIndex = 4;
-            textBox5.Text = "const COLORREF g_colourRed = 0x0000FF;\r\nconst COLORREF g_colour1 = 0x00FF00;";
+            textBox6.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            textBox6.Location = new Point(3, 178);
+            textBox6.Multiline = true;
+            textBox6.Name = "textBox6";
+            textBox6.ReadOnly = true;
+            textBox6.Size = new Size(308, 126);
+            textBox6.TabIndex = 9;
+            textBox6.Text = "FF0000 !Red\r\n00FF00 %Red";
             // 
-            // textBox3
+            // textBox7
             // 
-            textBox3.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            textBox3.Location = new Point(367, 149);
-            textBox3.Name = "textBox3";
-            textBox3.ReadOnly = true;
-            textBox3.Size = new Size(100, 23);
-            textBox3.TabIndex = 2;
-            textBox3.Text = "g_colour{0}";
+            textBox7.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            textBox7.Location = new Point(317, 178);
+            textBox7.Multiline = true;
+            textBox7.Name = "textBox7";
+            textBox7.ReadOnly = true;
+            textBox7.Size = new Size(308, 126);
+            textBox7.TabIndex = 8;
+            textBox7.Text = "const COLORREF Red = 0x0000FF;\r\nconst COLORREF g_colourRed = 0x00FF00;";
+            // 
+            // textBox8
+            // 
+            textBox8.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            textBox8.Location = new Point(525, 149);
+            textBox8.Name = "textBox8";
+            textBox8.ReadOnly = true;
+            textBox8.Size = new Size(100, 23);
+            textBox8.TabIndex = 7;
+            textBox8.Text = "g_colour{0}";
+            // 
+            // richTextBox2
+            // 
+            richTextBox2.BorderStyle = BorderStyle.None;
+            richTextBox2.Location = new Point(6, 6);
+            richTextBox2.Name = "richTextBox2";
+            richTextBox2.ScrollBars = RichTextBoxScrollBars.None;
+            richTextBox2.Size = new Size(619, 166);
+            richTextBox2.TabIndex = 10;
+            richTextBox2.Text = resources.GetString("richTextBox2.Text");
+            // 
+            // Arrays
+            // 
+            Arrays.Controls.Add(textBox9);
+            Arrays.Controls.Add(textBox10);
+            Arrays.Controls.Add(richTextBox3);
+            Arrays.Location = new Point(4, 24);
+            Arrays.Name = "Arrays";
+            Arrays.Padding = new Padding(3);
+            Arrays.Size = new Size(628, 333);
+            Arrays.TabIndex = 4;
+            Arrays.Text = "Arrays";
+            Arrays.UseVisualStyleBackColor = true;
+            // 
+            // textBox9
+            // 
+            textBox9.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            textBox9.Location = new Point(3, 88);
+            textBox9.Multiline = true;
+            textBox9.Name = "textBox9";
+            textBox9.ReadOnly = true;
+            textBox9.Size = new Size(308, 216);
+            textBox9.TabIndex = 13;
+            textBox9.Text = "RedArray\r\n0xFF0000\r\n0xFF0000\r\n0xFF0000\r\n\r\n0x00FF00 Green\r\n0x0000FF Blue\r\n\r\nAnother\r\n0xFF0000\r\n0xFF0000\r\n0xFF0000\r\n";
+            // 
+            // textBox10
+            // 
+            textBox10.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            textBox10.Location = new Point(317, 88);
+            textBox10.Multiline = true;
+            textBox10.Name = "textBox10";
+            textBox10.ReadOnly = true;
+            textBox10.Size = new Size(308, 216);
+            textBox10.TabIndex = 12;
+            textBox10.Text = resources.GetString("textBox10.Text");
+            // 
+            // richTextBox3
+            // 
+            richTextBox3.BorderStyle = BorderStyle.None;
+            richTextBox3.Location = new Point(6, 6);
+            richTextBox3.Name = "richTextBox3";
+            richTextBox3.ScrollBars = RichTextBoxScrollBars.None;
+            richTextBox3.Size = new Size(619, 76);
+            richTextBox3.TabIndex = 14;
+            richTextBox3.Text = resources.GetString("richTextBox3.Text");
             // 
             // Hex2ColourHelp
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(484, 361);
+            ClientSize = new Size(636, 361);
             Controls.Add(tabControl);
             MaximizeBox = false;
-            MaximumSize = new Size(500, 400);
+            MaximumSize = new Size(652, 400);
             MinimizeBox = false;
             MinimumSize = new Size(500, 400);
             Name = "Hex2ColourHelp";
@@ -183,6 +297,10 @@
             General.PerformLayout();
             NameFormat.ResumeLayout(false);
             NameFormat.PerformLayout();
+            NameFormat2.ResumeLayout(false);
+            NameFormat2.PerformLayout();
+            Arrays.ResumeLayout(false);
+            Arrays.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -199,5 +317,14 @@
         private TextBox textBox5;
         private TextBox textBox3;
         private RichTextBox richTextBox1;
+        private TabPage NameFormat2;
+        private TextBox textBox6;
+        private TextBox textBox7;
+        private TextBox textBox8;
+        private RichTextBox richTextBox2;
+        private TabPage Arrays;
+        private TextBox textBox9;
+        private TextBox textBox10;
+        private RichTextBox richTextBox3;
     }
 }

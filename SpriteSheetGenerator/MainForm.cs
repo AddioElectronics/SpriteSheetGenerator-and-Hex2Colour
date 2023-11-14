@@ -86,7 +86,7 @@ namespace Hex2Colour
             rotationControls.Add(checkBox_MirrrorX);
             rotationControls.Add(checkBox_MirrorY);
 
-            hex2ColourPath = Directory.EnumerateFiles(Environment.CurrentDirectory).FirstOrDefault(x => x.StartsWith("Hex2Colour.exe"));
+            hex2ColourPath = Directory.EnumerateFiles(Environment.CurrentDirectory).FirstOrDefault(x => Path.GetFileName(x) == "Hex2Colour.exe");
 
             hex2ColourToolStripMenuItem.Enabled = hex2ColourPath != null;
 

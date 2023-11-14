@@ -45,6 +45,10 @@ namespace Hex2Colour
         public bool AlphaMSB { get; set; } = true;
         public bool AmericanSpelling { get; set; }
         public bool AddToClipboard { get; set; }
+        public bool GenerateArrays { get; set; }
+
+        public bool AlwaysFormatName { get; set; }
+
         public string NameFormat { get; set; } = string.Empty;
 
         public static bool operator ==(Settings? a, Settings? b)
@@ -57,7 +61,8 @@ namespace Hex2Colour
                 a.LangApi == b.LangApi &&
                 a.SwapEndianess == b.SwapEndianess &&
                 a.AlphaMSB == b.AlphaMSB &&
-                a.AddToClipboard == b.AddToClipboard;
+                a.AddToClipboard == b.AddToClipboard &&
+                a.GenerateArrays == b.GenerateArrays;
         }
 
         public static bool operator !=(Settings? a, Settings? b)
@@ -112,6 +117,8 @@ namespace Hex2Colour
             settings.AlphaMSB = br.ReadBoolean();
             settings.AmericanSpelling = br.ReadBoolean();
             settings.AddToClipboard = br.ReadBoolean();
+            settings.GenerateArrays = br.ReadBoolean();
+            settings.AlwaysFormatName = br.ReadBoolean();
             settings.NameFormat = br.ReadString();
 
             fs.Close();
@@ -138,6 +145,8 @@ namespace Hex2Colour
             bw.Write(AlphaMSB);
             bw.Write(AmericanSpelling);
             bw.Write(AddToClipboard);
+            bw.Write(GenerateArrays);
+            bw.Write(AlwaysFormatName);
             bw.Write(NameFormat);
 
             //    return true;
@@ -158,6 +167,8 @@ namespace Hex2Colour
             clone.SwapEndianess = SwapEndianess;
             clone.LangApi = LangApi;
             clone.AmericanSpelling = AmericanSpelling;
+            clone.GenerateArrays = GenerateArrays;
+            clone.AlwaysFormatName = AlwaysFormatName;
             return clone;
         }
 
