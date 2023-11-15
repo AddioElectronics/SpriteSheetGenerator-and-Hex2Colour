@@ -50,11 +50,11 @@ Its a simple basic winforms program, just open the solution and press play.
 
 ## License
 ---
-- []()
+- [License](GNU GPLv3)
 ## Author
 ---
 - Author : Addio
 - Website : www.Addio.io
 
-[]:https:/
+[License]:https://github.com/AddioElectronics/SpriteSheetGenerator/blob/master/LICENSE
 

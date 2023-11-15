@@ -12,6 +12,7 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <BaseOutputPath>..\bin\</BaseOutputPath>
+    <Company>Addio Electronics</Company>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -31,6 +32,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Hex2Colour\Hex2Colour.csproj" />
+    <ProjectReference Include="..\SpriteSheetGenerator.Core\SpriteSheetGenerator.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

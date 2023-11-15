@@ -1,4 +1,4 @@
-﻿namespace Hex2Colour
+﻿namespace SpriteSheetGenerator
 {
     partial class MainForm
     {
@@ -35,6 +35,7 @@
             button_MoveTop = new Button();
             button_MoveBottom = new Button();
             groupBox_Output = new GroupBox();
+            button_Generate = new Button();
             checkBox_AlignVert = new CheckBox();
             label_PixelFormat = new Label();
             comboBox_PixelFormat = new ComboBox();
@@ -56,6 +57,7 @@
             trackBar_ScaleImages = new TrackBar();
             splitter_Images = new Splitter();
             flowLayoutPanel_Sprites = new FlowLayoutPanel();
+            panel_SpriteSheet = new Panel();
             tableLayoutPanel_SheetInfo = new TableLayoutPanel();
             label_SheetHeight = new Label();
             label_SheetWidth = new Label();
@@ -68,7 +70,6 @@
             hex2ColourToolStripMenuItem = new ToolStripMenuItem();
             importToolStripMenuItem1 = new ToolStripMenuItem();
             exportToolStripMenuItem1 = new ToolStripMenuItem();
-            generateSpriteSheetToolStripMenuItem = new ToolStripMenuItem();
             helpToolStripMenuItem = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)pictureBox_SpriteSheet).BeginInit();
             ((System.ComponentModel.ISupportInitialize)splitContainer_Master).BeginInit();
@@ -83,6 +84,7 @@
             splitContainer_Images.Panel2.SuspendLayout();
             splitContainer_Images.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)trackBar_ScaleImages).BeginInit();
+            panel_SpriteSheet.SuspendLayout();
             tableLayoutPanel_SheetInfo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)trackBar_ScaleSheet).BeginInit();
             menuStrip.SuspendLayout();
@@ -91,9 +93,9 @@
             // pictureBox_SpriteSheet
             // 
             pictureBox_SpriteSheet.BackgroundImageLayout = ImageLayout.Stretch;
-            pictureBox_SpriteSheet.Location = new Point(0, 0);
+            pictureBox_SpriteSheet.Location = new Point(0, -1);
             pictureBox_SpriteSheet.Name = "pictureBox_SpriteSheet";
-            pictureBox_SpriteSheet.Size = new Size(254, 221);
+            pictureBox_SpriteSheet.Size = new Size(198, 228);
             pictureBox_SpriteSheet.TabIndex = 1;
             pictureBox_SpriteSheet.TabStop = false;
             // 
@@ -106,13 +108,13 @@
             // splitContainer_Master.Panel1
             // 
             splitContainer_Master.Panel1.Controls.Add(panel_Settings);
-            splitContainer_Master.Panel1MinSize = 420;
+            splitContainer_Master.Panel1MinSize = 400;
             // 
             // splitContainer_Master.Panel2
             // 
             splitContainer_Master.Panel2.Controls.Add(splitContainer_Images);
-            splitContainer_Master.Size = new Size(859, 455);
-            splitContainer_Master.SplitterDistance = 420;
+            splitContainer_Master.Size = new Size(1525, 650);
+            splitContainer_Master.SplitterDistance = 761;
             splitContainer_Master.TabIndex = 2;
             // 
             // panel_Settings
@@ -130,13 +132,13 @@
             panel_Settings.Dock = DockStyle.Fill;
             panel_Settings.Location = new Point(0, 0);
             panel_Settings.Name = "panel_Settings";
-            panel_Settings.Size = new Size(420, 455);
+            panel_Settings.Size = new Size(761, 650);
             panel_Settings.TabIndex = 0;
             // 
             // button_MoveTop
             // 
             button_MoveTop.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            button_MoveTop.Location = new Point(322, 425);
+            button_MoveTop.Location = new Point(661, 617);
             button_MoveTop.Name = "button_MoveTop";
             button_MoveTop.Size = new Size(91, 23);
             button_MoveTop.TabIndex = 13;
@@ -147,7 +149,7 @@
             // button_MoveBottom
             // 
             button_MoveBottom.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            button_MoveBottom.Location = new Point(225, 425);
+            button_MoveBottom.Location = new Point(564, 617);
             button_MoveBottom.Name = "button_MoveBottom";
             button_MoveBottom.Size = new Size(91, 23);
             button_MoveBottom.TabIndex = 14;
@@ -157,15 +159,28 @@
             // 
             // groupBox_Output
             // 
+            groupBox_Output.Controls.Add(button_Generate);
             groupBox_Output.Controls.Add(checkBox_AlignVert);
             groupBox_Output.Controls.Add(label_PixelFormat);
             groupBox_Output.Controls.Add(comboBox_PixelFormat);
-            groupBox_Output.Location = new Point(273, 3);
+            groupBox_Output.Location = new Point(280, 3);
             groupBox_Output.Name = "groupBox_Output";
             groupBox_Output.Size = new Size(140, 145);
             groupBox_Output.TabIndex = 12;
             groupBox_Output.TabStop = false;
             groupBox_Output.Text = "Output";
+            // 
+            // button_Generate
+            // 
+            button_Generate.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            button_Generate.Enabled = false;
+            button_Generate.Location = new Point(6, 97);
+            button_Generate.Name = "button_Generate";
+            button_Generate.Size = new Size(128, 42);
+            button_Generate.TabIndex = 14;
+            button_Generate.Text = "Generate Sheet";
+            button_Generate.UseVisualStyleBackColor = true;
+            button_Generate.Click += button_CreateSpriteSheet_Click;
             // 
             // checkBox_AlignVert
             // 
@@ -188,6 +203,7 @@
             // 
             // comboBox_PixelFormat
             // 
+            comboBox_PixelFormat.DropDownStyle = ComboBoxStyle.DropDownList;
             comboBox_PixelFormat.FormattingEnabled = true;
             comboBox_PixelFormat.Location = new Point(6, 43);
             comboBox_PixelFormat.Name = "comboBox_PixelFormat";
@@ -206,7 +222,7 @@
             groupBox_Rotations.Controls.Add(checkBox_Rotate180);
             groupBox_Rotations.Location = new Point(5, 3);
             groupBox_Rotations.Name = "groupBox_Rotations";
-            groupBox_Rotations.Size = new Size(262, 145);
+            groupBox_Rotations.Size = new Size(269, 145);
             groupBox_Rotations.TabIndex = 11;
             groupBox_Rotations.TabStop = false;
             groupBox_Rotations.Text = "Rotations";
@@ -294,7 +310,7 @@
             // button_Remove
             // 
             button_Remove.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            button_Remove.Location = new Point(86, 399);
+            button_Remove.Location = new Point(5, 591);
             button_Remove.Name = "button_Remove";
             button_Remove.Size = new Size(75, 23);
             button_Remove.TabIndex = 5;
@@ -305,7 +321,7 @@
             // button_MoveUp
             // 
             button_MoveUp.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            button_MoveUp.Location = new Point(322, 399);
+            button_MoveUp.Location = new Point(661, 591);
             button_MoveUp.Name = "button_MoveUp";
             button_MoveUp.Size = new Size(91, 23);
             button_MoveUp.TabIndex = 3;
@@ -322,13 +338,14 @@
             listBox_Paths.Location = new Point(5, 153);
             listBox_Paths.Name = "listBox_Paths";
             listBox_Paths.SelectionMode = SelectionMode.MultiExtended;
-            listBox_Paths.Size = new Size(408, 242);
+            listBox_Paths.Size = new Size(747, 422);
             listBox_Paths.TabIndex = 0;
+            listBox_Paths.KeyUp += listBox_Paths_KeyUp;
             // 
             // button_MoveDown
             // 
             button_MoveDown.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            button_MoveDown.Location = new Point(225, 399);
+            button_MoveDown.Location = new Point(564, 591);
             button_MoveDown.Name = "button_MoveDown";
             button_MoveDown.Size = new Size(91, 23);
             button_MoveDown.TabIndex = 4;
@@ -339,7 +356,7 @@
             // button_Clear
             // 
             button_Clear.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            button_Clear.Location = new Point(5, 399);
+            button_Clear.Location = new Point(5, 617);
             button_Clear.Name = "button_Clear";
             button_Clear.Size = new Size(75, 23);
             button_Clear.TabIndex = 1;
@@ -362,22 +379,22 @@
             // 
             // splitContainer_Images.Panel2
             // 
+            splitContainer_Images.Panel2.Controls.Add(panel_SpriteSheet);
             splitContainer_Images.Panel2.Controls.Add(tableLayoutPanel_SheetInfo);
             splitContainer_Images.Panel2.Controls.Add(trackBar_ScaleSheet);
             splitContainer_Images.Panel2.Controls.Add(splitter_Sheet);
-            splitContainer_Images.Panel2.Controls.Add(pictureBox_SpriteSheet);
-            splitContainer_Images.Size = new Size(435, 455);
-            splitContainer_Images.SplitterDistance = 163;
+            splitContainer_Images.Size = new Size(760, 650);
+            splitContainer_Images.SplitterDistance = 284;
             splitContainer_Images.TabIndex = 0;
             // 
             // trackBar_ScaleImages
             // 
             trackBar_ScaleImages.Dock = DockStyle.Bottom;
-            trackBar_ScaleImages.Location = new Point(3, 408);
+            trackBar_ScaleImages.Location = new Point(3, 603);
             trackBar_ScaleImages.Maximum = 100;
             trackBar_ScaleImages.Minimum = 1;
             trackBar_ScaleImages.Name = "trackBar_ScaleImages";
-            trackBar_ScaleImages.Size = new Size(158, 45);
+            trackBar_ScaleImages.Size = new Size(279, 45);
             trackBar_ScaleImages.TabIndex = 7;
             trackBar_ScaleImages.Value = 10;
             trackBar_ScaleImages.ValueChanged += trackBar_ScaleImages_ValueChanged;
@@ -386,7 +403,7 @@
             // 
             splitter_Images.Location = new Point(0, 0);
             splitter_Images.Name = "splitter_Images";
-            splitter_Images.Size = new Size(3, 453);
+            splitter_Images.Size = new Size(3, 648);
             splitter_Images.TabIndex = 1;
             splitter_Images.TabStop = false;
             // 
@@ -396,8 +413,18 @@
             flowLayoutPanel_Sprites.Dock = DockStyle.Fill;
             flowLayoutPanel_Sprites.Location = new Point(0, 0);
             flowLayoutPanel_Sprites.Name = "flowLayoutPanel_Sprites";
-            flowLayoutPanel_Sprites.Size = new Size(161, 453);
+            flowLayoutPanel_Sprites.Size = new Size(282, 648);
             flowLayoutPanel_Sprites.TabIndex = 0;
+            // 
+            // panel_SpriteSheet
+            // 
+            panel_SpriteSheet.AutoScroll = true;
+            panel_SpriteSheet.Controls.Add(pictureBox_SpriteSheet);
+            panel_SpriteSheet.Dock = DockStyle.Fill;
+            panel_SpriteSheet.Location = new Point(3, 0);
+            panel_SpriteSheet.Name = "panel_SpriteSheet";
+            panel_SpriteSheet.Size = new Size(467, 576);
+            panel_SpriteSheet.TabIndex = 7;
             // 
             // tableLayoutPanel_SheetInfo
             // 
@@ -407,18 +434,18 @@
             tableLayoutPanel_SheetInfo.Controls.Add(label_SheetHeight, 1, 0);
             tableLayoutPanel_SheetInfo.Controls.Add(label_SheetWidth, 0, 0);
             tableLayoutPanel_SheetInfo.Dock = DockStyle.Bottom;
-            tableLayoutPanel_SheetInfo.Location = new Point(3, 381);
+            tableLayoutPanel_SheetInfo.Location = new Point(3, 576);
             tableLayoutPanel_SheetInfo.Name = "tableLayoutPanel_SheetInfo";
             tableLayoutPanel_SheetInfo.RowCount = 1;
             tableLayoutPanel_SheetInfo.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableLayoutPanel_SheetInfo.Size = new Size(263, 27);
+            tableLayoutPanel_SheetInfo.Size = new Size(467, 27);
             tableLayoutPanel_SheetInfo.TabIndex = 6;
             // 
             // label_SheetHeight
             // 
             label_SheetHeight.Anchor = AnchorStyles.Left;
             label_SheetHeight.AutoSize = true;
-            label_SheetHeight.Location = new Point(134, 6);
+            label_SheetHeight.Location = new Point(236, 6);
             label_SheetHeight.Name = "label_SheetHeight";
             label_SheetHeight.Size = new Size(52, 15);
             label_SheetHeight.TabIndex = 1;
@@ -438,11 +465,11 @@
             // trackBar_ScaleSheet
             // 
             trackBar_ScaleSheet.Dock = DockStyle.Bottom;
-            trackBar_ScaleSheet.Location = new Point(3, 408);
+            trackBar_ScaleSheet.Location = new Point(3, 603);
             trackBar_ScaleSheet.Maximum = 100;
             trackBar_ScaleSheet.Minimum = 1;
             trackBar_ScaleSheet.Name = "trackBar_ScaleSheet";
-            trackBar_ScaleSheet.Size = new Size(263, 45);
+            trackBar_ScaleSheet.Size = new Size(467, 45);
             trackBar_ScaleSheet.TabIndex = 4;
             trackBar_ScaleSheet.Value = 10;
             trackBar_ScaleSheet.ValueChanged += trackBar_ScaleSheet_ValueChanged;
@@ -451,16 +478,16 @@
             // 
             splitter_Sheet.Location = new Point(0, 0);
             splitter_Sheet.Name = "splitter_Sheet";
-            splitter_Sheet.Size = new Size(3, 453);
+            splitter_Sheet.Size = new Size(3, 648);
             splitter_Sheet.TabIndex = 2;
             splitter_Sheet.TabStop = false;
             // 
             // menuStrip
             // 
-            menuStrip.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, toolsToolStripMenuItem, importToolStripMenuItem1, exportToolStripMenuItem1, generateSpriteSheetToolStripMenuItem, helpToolStripMenuItem });
+            menuStrip.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, toolsToolStripMenuItem, importToolStripMenuItem1, exportToolStripMenuItem1, helpToolStripMenuItem });
             menuStrip.Location = new Point(0, 0);
             menuStrip.Name = "menuStrip";
-            menuStrip.Size = new Size(859, 24);
+            menuStrip.Size = new Size(1525, 24);
             menuStrip.TabIndex = 6;
             menuStrip.Text = "menuStrip1";
             // 
@@ -501,17 +528,11 @@
             // 
             // exportToolStripMenuItem1
             // 
+            exportToolStripMenuItem1.Enabled = false;
             exportToolStripMenuItem1.Name = "exportToolStripMenuItem1";
             exportToolStripMenuItem1.Size = new Size(53, 20);
             exportToolStripMenuItem1.Text = "Export";
             exportToolStripMenuItem1.Click += button_Export_Click;
-            // 
-            // generateSpriteSheetToolStripMenuItem
-            // 
-            generateSpriteSheetToolStripMenuItem.Name = "generateSpriteSheetToolStripMenuItem";
-            generateSpriteSheetToolStripMenuItem.Size = new Size(131, 20);
-            generateSpriteSheetToolStripMenuItem.Text = "Generate Sprite Sheet";
-            generateSpriteSheetToolStripMenuItem.Click += button_CreateSpriteSheet_Click;
             // 
             // helpToolStripMenuItem
             // 
@@ -522,18 +543,21 @@
             // 
             // MainForm
             // 
+            AllowDrop = true;
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(859, 479);
+            ClientSize = new Size(1525, 674);
             Controls.Add(splitContainer_Master);
             Controls.Add(menuStrip);
             Icon = (Icon)resources.GetObject("$this.Icon");
             MainMenuStrip = menuStrip;
-            MinimumSize = new Size(875, 480);
+            MinimumSize = new Size(683, 348);
             Name = "MainForm";
             ShowIcon = false;
             Text = "Sprite Sheet Generator";
             FormClosing += PalettizerForm_FormClosing;
+            DragDrop += MainForm_DragDrop;
+            DragEnter += MainForm_DragEnter;
             ((System.ComponentModel.ISupportInitialize)pictureBox_SpriteSheet).EndInit();
             splitContainer_Master.Panel1.ResumeLayout(false);
             splitContainer_Master.Panel2.ResumeLayout(false);
@@ -551,6 +575,7 @@
             ((System.ComponentModel.ISupportInitialize)splitContainer_Images).EndInit();
             splitContainer_Images.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)trackBar_ScaleImages).EndInit();
+            panel_SpriteSheet.ResumeLayout(false);
             tableLayoutPanel_SheetInfo.ResumeLayout(false);
             tableLayoutPanel_SheetInfo.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)trackBar_ScaleSheet).EndInit();
@@ -576,7 +601,6 @@
         private MenuStrip menuStrip;
         private ToolStripMenuItem fileToolStripMenuItem;
         private ToolStripMenuItem closeToolStripMenuItem;
-        private ToolStripMenuItem generateSpriteSheetToolStripMenuItem;
         private ComboBox comboBox_PixelFormat;
         private GroupBox groupBox_Rotations;
         private CheckBox checkBox_Rotate90;
@@ -603,5 +627,7 @@
         private Button button_AllRotations;
         private ToolStripMenuItem toolsToolStripMenuItem;
         private ToolStripMenuItem hex2ColourToolStripMenuItem;
+        private Button button_Generate;
+        private Panel panel_SpriteSheet;
     }
 }

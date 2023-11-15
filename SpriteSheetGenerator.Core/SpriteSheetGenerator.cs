@@ -1,12 +1,13 @@
-﻿using System.Drawing.Imaging;
+﻿using System.Drawing;
+using System.Drawing.Imaging;
 using Image = System.Drawing.Image;
 
-namespace Hex2Colour
+namespace SpriteSheetGenerator
 {
     /// <summary>
     /// Takes 1 or more bitmaps and applies optional rotations before combining them into a single sprite sheet.
     /// </summary>
-    public class Hex2Colour
+    public class SpriteSheetGenerator
     {
         #region Definitions
 
@@ -69,14 +70,14 @@ namespace Hex2Colour
 
         #region Constructors
 
-        public Hex2Colour() { }
+        public SpriteSheetGenerator() { }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="images">Array of images</param>
         /// <param name="toGenerate">Types of rotations to generate.</param>
-        public Hex2Colour(Image[] images, params RotateFlipType[] toGenerate)
+        public SpriteSheetGenerator(Image[] images, params RotateFlipType[] toGenerate)
         {
             SetImages(images, toGenerate);
         }
@@ -86,7 +87,7 @@ namespace Hex2Colour
         /// </summary>
         /// <param name="images">Image list</param>
         /// <param name="toGenerate">Types of rotations to generate.</param>
-        public Hex2Colour(List<Image> images, params RotateFlipType[] toGenerate) : this(images.ToArray(), toGenerate) { }
+        public SpriteSheetGenerator(List<Image> images, params RotateFlipType[] toGenerate) : this(images.ToArray(), toGenerate) { }
 
         #endregion
 
@@ -159,10 +160,10 @@ namespace Hex2Colour
         /// <returns>The total size of sprite sheet to generate.</returns>
         SetSize GetSheetSize(out SetSize[] setSizes)
         {
-            int minWidth = 0;         //Sheet width
-            int minHeight = 0;        //Sheet height
-            int maxWidth = 0;         //Sheet width
-            int maxHeight = 0;        //Sheet height
+            int minWidth = 0;         //Horizontally aligned Sheet width
+            int minHeight = 0;        //Veritcally aligned Sheet height
+            int maxWidth = 0;         //Veritcally aligned Sheet width
+            int maxHeight = 0;        //Horizontally aligned Sheet height
 
             List<SetSize> _setSizes = new List<SetSize>();
 
@@ -170,17 +171,15 @@ namespace Hex2Colour
             {
                 SetSize setSize = GetBitmapSetSize(bmcol);
                 _setSizes.Add(setSize);
-                maxWidth += setSize.minSize.Width;
-                maxHeight += setSize.minSize.Height;
 
-                //minWidth += setSize.minSize.Width;
-                //minHeight += setSize.minSize.Height;
+                minWidth += setSize.minSize.Width;
+                minHeight += setSize.minSize.Height;
 
-                if (minWidth < setSize.maxSize.Width)
-                    minWidth = setSize.maxSize.Width;
+                if (maxWidth < setSize.maxSize.Width)
+                    maxWidth = setSize.maxSize.Width;
 
-                if (minHeight < setSize.maxSize.Height)
-                    minHeight = setSize.maxSize.Height;
+                if (maxHeight < setSize.maxSize.Height)
+                    maxHeight = setSize.maxSize.Height;
             }
 
             setSizes = _setSizes.ToArray();

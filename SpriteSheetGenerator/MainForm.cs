@@ -4,16 +4,15 @@
 #pragma warning disable IDE0090 // Use 'new(...)'
 #pragma warning disable IDE1006 // Naming Styles <- dumb when winforms auto-generates function names that ignore the convention
 
-using Hex2Colour;
-using System.Collections.Generic;
 using System.Data;
+using System.Media;
+using System.Reflection;
 using System.Diagnostics;
 using System.Drawing.Imaging;
-using System.Media;
-using System.Runtime.CompilerServices;
+using System.Collections.Specialized;
 using Image = System.Drawing.Image;
 
-namespace Hex2Colour
+namespace SpriteSheetGenerator
 {
     public partial class MainForm : Form
     {
@@ -22,6 +21,7 @@ namespace Hex2Colour
         class ImagePath
         {
             public Image image;
+            public string path;
             public string filename;
             public PictureBox pb;
 
@@ -67,6 +67,9 @@ namespace Hex2Colour
 
         readonly string? hex2ColourPath;
 
+        static readonly string[] outputFormats = Util.GetAllImageFormats().Select(x => x.ToString()).Where(x => x != "MemoryBMP").ToArray();
+
+
         #endregion
 
         #region Constructors
@@ -74,10 +77,12 @@ namespace Hex2Colour
         public MainForm()
         {
             InitializeComponent();
-            PopulateComboBoxes();
-            InitializeFileDialogs();
 
+            // Combo Boxes
+            comboBox_PixelFormat.Items.AddRange(Enum.GetNames<PixelFormat>());
+            comboBox_PixelFormat.Text = Enum.GetName(PixelFormat.Format32bppPArgb);
 
+            // Rotation Checkboxes
             rotationControls.Add(checkBox_Rotate90);
             rotationControls.Add(checkBox_Rotate180);
             rotationControls.Add(checkBox_Rotate270);
@@ -86,23 +91,11 @@ namespace Hex2Colour
             rotationControls.Add(checkBox_MirrrorX);
             rotationControls.Add(checkBox_MirrorY);
 
+            // External tools
             hex2ColourPath = Directory.EnumerateFiles(Environment.CurrentDirectory).FirstOrDefault(x => Path.GetFileName(x) == "Hex2Colour.exe");
             hex2ColourToolStripMenuItem.Enabled = hex2ColourPath != null;
 
-        }
-
-        #endregion
-
-        #region Methods
-
-        private void PopulateComboBoxes()
-        {
-            comboBox_PixelFormat.Items.AddRange(Enum.GetNames<PixelFormat>());
-            comboBox_PixelFormat.Text = Enum.GetName(PixelFormat.Format32bppPArgb);
-        }
-
-        private void InitializeFileDialogs()
-        {
+            // File Dialogs
             var codecs = ImageCodecInfo.GetImageEncoders();
             string sep = string.Empty;
 
@@ -113,37 +106,93 @@ namespace Hex2Colour
                 sep = "|";
             }
             ofd.Filter = String.Format("{0}{1}{2} ({3})|{3}", ofd.Filter, sep, "All Files", "*.*");
-            sfd.Filter = ofd.Filter;
             ofd.Multiselect = true;
+
+
+            sep = string.Empty;
+            foreach (string format in outputFormats)
+            {
+                sfd.Filter = String.Format("{0}{1}{2} (*.{3})|*.{3}", sfd.Filter, sep, format, format.ToLower());
+                sep = "|";
+            }
+
+        }
+
+        #endregion
+
+        #region Methods
+
+        private void AddPreviewImage(ImagePath imagePath)
+        {
+            if (imagePath.pb == null)
+            {
+                PictureBox pb = new PictureBox
+                {
+                    BackgroundImageLayout = ImageLayout.Stretch,
+                    BackgroundImage = imagePath.image,
+                    Size = Util.ScaleSize(imagePath.image.Size, scaleImages)
+                };
+
+                imagePath.pb = pb;
+            }
+
+            if (flowLayoutPanel_Sprites.Controls.Contains(imagePath.pb))
+                flowLayoutPanel_Sprites.Controls.Remove(imagePath.pb);
+
+            flowLayoutPanel_Sprites.Controls.Add(imagePath.pb);
+        }
+
+        private void SetControlsEnabled()
+        {
+            button_Generate.Enabled = images.Count > 0;
+            exportToolStripMenuItem1.Enabled = pictureBox_SpriteSheet.BackgroundImage != null;
+
         }
 
         private void OpenImage(string filename)
         {
-            Image image = Image.FromFile(filename);
-            PictureBox pb = new PictureBox
+            Image image;
+
+            try
             {
-                BackgroundImageLayout = ImageLayout.Stretch,
-                BackgroundImage = image,
-                Size = Util.ScaleSize(image.Size, scaleImages)
-            };
+                image = Image.FromFile(filename);
+            }
+            catch
+            {
+                return;
+            }
 
             ImagePath imagePath = new ImagePath()
             {
                 image = image,
+                path = filename,
                 filename = Path.GetFileName(filename),
-                pb = pb
             };
 
             listBox_Paths.Items.Add(imagePath);
             images.Add(imagePath);
+            AddPreviewImage(imagePath);
+            SetControlsEnabled();
+        }
 
-            flowLayoutPanel_Sprites.Controls.Add(pb);
+        private void OpenImages(string[] images)
+        {
+            foreach (string path in images)
+            {
+                OpenImage(path);
+            }
         }
 
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="oldIndex"></param>
+        /// <param name="newIndex"></param>
+        /// <remarks>Moves the item in the listbox and list, but not the preview panel.</remarks>
         private void MoveImageOrder(int oldIndex, int newIndex)
         {
+
             ImagePath imagePath = (ImagePath)listBox_Paths.Items[oldIndex];
             listBox_Paths.Items.RemoveAt(oldIndex);
             listBox_Paths.Items.Insert(newIndex, imagePath);
@@ -151,6 +200,16 @@ namespace Hex2Colour
 
             images.Remove(imagePath);
             images.Insert(newIndex, imagePath);
+        }
+
+        private void RefreshPreviewPanel()
+        {
+            flowLayoutPanel_Sprites.Controls.Clear();
+
+            foreach (var image in images)
+            {
+                AddPreviewImage(image);
+            }
         }
 
         private PixelFormat? ParsePixelFormat()
@@ -191,6 +250,24 @@ namespace Hex2Colour
             return types.ToArray();
         }
 
+        private void DeleteSelectedImages()
+        {
+            if (listBox_Paths.SelectedIndex == -1) return;
+
+            var selected = listBox_Paths.SelectedItems;
+
+            for (int i = selected.Count - 1; i >= 0; i--)
+            {
+                ImagePath item = (ImagePath)selected[i];
+
+                listBox_Paths.Items.Remove(selected[i]);
+                images.Remove(item);
+                flowLayoutPanel_Sprites.Controls.Remove(item.pb);
+            }
+        }
+
+
+
         #endregion
 
         #region Events
@@ -216,20 +293,11 @@ namespace Hex2Colour
             if (result != DialogResult.OK)
                 return;
 
-            foreach (string path in ofd.FileNames)
-            {
-                OpenImage(path);
-            }
+            OpenImages(ofd.FileNames);
         }
 
         private void button_MoveTop_Click(object sender, EventArgs e)
         {
-            //int index = listBox_Paths.SelectedIndex;
-
-            //if (index == -1 || index == 0) return;
-
-            //MoveImageOrder(index, 0);
-
             var items = listBox_Paths.SelectedItems;
 
             if (items.Count == 0) return;
@@ -243,6 +311,8 @@ namespace Hex2Colour
 
                 MoveImageOrder(index, newIndex);
             }
+
+            RefreshPreviewPanel();
         }
 
         private void button_MoveBottom_Click(object sender, EventArgs e)
@@ -260,6 +330,8 @@ namespace Hex2Colour
 
                 MoveImageOrder(index, newIndex);
             }
+
+            RefreshPreviewPanel();
         }
 
         private void button_MoveUp_Click(object sender, EventArgs e)
@@ -276,6 +348,8 @@ namespace Hex2Colour
 
                 MoveImageOrder(index, newIndex);
             }
+
+            RefreshPreviewPanel();
         }
 
         private void button_MoveDown_Click(object sender, EventArgs e)
@@ -287,12 +361,14 @@ namespace Hex2Colour
             for (int i = 0; i < items.Count; i++)
             {
                 int index = listBox_Paths.Items.IndexOf(items[i]);
-                int newIndex = index - 1;
+                int newIndex = index + 1;
 
                 if (index == -1 || newIndex == listBox_Paths.Items.Count) continue;
 
                 MoveImageOrder(index, newIndex);
             }
+
+            RefreshPreviewPanel();
         }
 
         private void button_Clear_Click(object sender, EventArgs e)
@@ -302,16 +378,70 @@ namespace Hex2Colour
             flowLayoutPanel_Sprites.Controls.Clear();
         }
 
+        private void listBox_Paths_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+                DeleteSelectedImages();
+            else if (e.Control)
+            {
+                if (e.KeyCode == Keys.C)
+                {
+                    var paths = listBox_Paths.SelectedItems.OfType<ImagePath>().Select(x => x.path).ToArray();
+                    StringCollection strings = new StringCollection();
+                    strings.AddRange(paths);
+                    Clipboard.SetFileDropList(strings);
+                }
+                else if (e.KeyCode == Keys.X)
+                {
+                    var imagePaths = listBox_Paths.SelectedItems.OfType<ImagePath>().ToArray();
+                    StringCollection strings = new StringCollection();
+                    strings.AddRange(imagePaths.Select(x => x.path).ToArray());
+                    Clipboard.SetFileDropList(strings);
+                    DeleteSelectedImages();
+                }
+                else if (e.KeyCode == Keys.V)
+                {
+                    var files = Clipboard.GetFileDropList();
+
+                    if (files == null || files.Count == 0)
+                        return;
+
+                    OpenImages(files.Cast<string>().ToArray());
+                }
+                else if (e.KeyCode == Keys.A)
+                {
+                    var items = listBox_Paths.Items;
+
+                    for (int i = 0; i < items.Count; i++)
+                    {
+                        if (!listBox_Paths.SelectedItems.Contains(items[i]))
+                            listBox_Paths.SelectedItems.Add(items[i]);
+                    }
+                }
+            }
+        }
+
+        private void MainForm_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+                e.Effect = DragDropEffects.Copy;
+            else
+                e.Effect = DragDropEffects.None;
+        }
+
+        private void MainForm_DragDrop(object sender, DragEventArgs e)
+        {
+            string[]? files = (string[]?)e.Data.GetData(DataFormats.FileDrop);
+
+            if (files == null || files.Length == 0)
+                return;
+
+            OpenImages(files);
+        }
+
         private void button_Remove_Click(object sender, EventArgs e)
         {
-            int index = listBox_Paths.SelectedIndex;
-
-            if (index == -1) return;
-
-            ImagePath imagePath = (ImagePath)listBox_Paths.Items[index];
-            flowLayoutPanel_Sprites.Controls.Remove(imagePath.pb);
-            listBox_Paths.Items.RemoveAt(index);
-            images.Remove(imagePath);
+            DeleteSelectedImages();
         }
 
         private void trackBar_ScaleImages_ValueChanged(object sender, EventArgs e)
@@ -336,13 +466,13 @@ namespace Hex2Colour
 
         private void button_CreateSpriteSheet_Click(object sender, EventArgs e)
         {
-            if(images.Count == 0)
+            if (images.Count == 0)
             {
                 MessageBox.Show("No images");
                 return;
             }
 
-            Hex2Colour generator = new Hex2Colour(images.Select(x => x.image).ToArray(), GetRotationTypes());
+            SpriteSheetGenerator generator = new SpriteSheetGenerator(images.Select(x => x.image).ToArray(), GetRotationTypes());
 
             PixelFormat? pixelFormat = ParsePixelFormat();
 
@@ -363,6 +493,9 @@ namespace Hex2Colour
             sheetUnsaved = true;
             label_SheetWidth.Text = $"Width : {sheet.Width}";
             label_SheetHeight.Text = $"Height : {sheet.Height}";
+
+            exportToolStripMenuItem1.Enabled = true;
+            pictureBox_SpriteSheet.BorderStyle = BorderStyle.FixedSingle;
         }
 
         private void button_Export_Click(object sender, EventArgs e)
@@ -373,9 +506,16 @@ namespace Hex2Colour
 
             if (result != DialogResult.OK) return;
 
-            sheet.Save(sfd.FileName);
+            ImageFormat? format = Util.GetImageFormat(Path.GetExtension(sfd.FileName).Trim('.'));
+
+            if (format == null)
+            {
+                MessageBox.Show("Invalid Image Format");
+                return;
+            }
+
+            sheet.Save(sfd.FileName, format);
             sheetUnsaved = false;
-            //saveFileDialog.
         }
 
         private void closeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -410,9 +550,6 @@ namespace Hex2Colour
         }
 
         #endregion
-
-
-
     }
 }
 #pragma warning restore CS8604 // Possible null reference argument.

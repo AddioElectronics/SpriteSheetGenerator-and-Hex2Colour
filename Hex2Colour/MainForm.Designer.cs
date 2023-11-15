@@ -38,6 +38,7 @@ namespace Hex2Colour
             importSettingsToolStripMenuItem = new ToolStripMenuItem();
             closeToolStripMenuItem = new ToolStripMenuItem();
             toolsToolStripMenuItem = new ToolStripMenuItem();
+            colourHarvestorToolStripMenuItem = new ToolStripMenuItem();
             spriteSheetGeneratorToolStripMenuItem = new ToolStripMenuItem();
             settingsToolStripMenuItem = new ToolStripMenuItem();
             helpToolStripMenuItem = new ToolStripMenuItem();
@@ -47,7 +48,6 @@ namespace Hex2Colour
             toolTip1 = new ToolTip(components);
             button_Append = new Button();
             button_Clear = new Button();
-            colourHarvestorToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer).BeginInit();
             splitContainer.Panel1.SuspendLayout();
@@ -103,14 +103,14 @@ namespace Hex2Colour
             // importSettingsToolStripMenuItem
             // 
             importSettingsToolStripMenuItem.Name = "importSettingsToolStripMenuItem";
-            importSettingsToolStripMenuItem.Size = new Size(180, 22);
+            importSettingsToolStripMenuItem.Size = new Size(155, 22);
             importSettingsToolStripMenuItem.Text = "Import Settings";
             importSettingsToolStripMenuItem.Click += importSettingsToolStripMenuItem_Click;
             // 
             // closeToolStripMenuItem
             // 
             closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            closeToolStripMenuItem.Size = new Size(180, 22);
+            closeToolStripMenuItem.Size = new Size(155, 22);
             closeToolStripMenuItem.Text = "Close";
             closeToolStripMenuItem.Click += closeToolStripMenuItem_Click;
             // 
@@ -120,6 +120,13 @@ namespace Hex2Colour
             toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             toolsToolStripMenuItem.Size = new Size(46, 20);
             toolsToolStripMenuItem.Text = "Tools";
+            // 
+            // colourHarvestorToolStripMenuItem
+            // 
+            colourHarvestorToolStripMenuItem.Name = "colourHarvestorToolStripMenuItem";
+            colourHarvestorToolStripMenuItem.Size = new Size(191, 22);
+            colourHarvestorToolStripMenuItem.Text = "Colour Harvestor";
+            colourHarvestorToolStripMenuItem.Click += colourHarvestorToolStripMenuItem_Click;
             // 
             // spriteSheetGeneratorToolStripMenuItem
             // 
@@ -200,13 +207,6 @@ namespace Hex2Colour
             button_Clear.Text = "Clear";
             button_Clear.UseVisualStyleBackColor = true;
             button_Clear.Click += button_Clear_Click;
-            // 
-            // colourHarvestorToolStripMenuItem
-            // 
-            colourHarvestorToolStripMenuItem.Name = "colourHarvestorToolStripMenuItem";
-            colourHarvestorToolStripMenuItem.Size = new Size(191, 22);
-            colourHarvestorToolStripMenuItem.Text = "Colour Harvestor";
-            colourHarvestorToolStripMenuItem.Click += colourHarvestorToolStripMenuItem_Click;
             // 
             // MainForm
             // 

@@ -165,7 +165,8 @@ namespace Hex2Colour
 
                     for(int i = 0; i < items.Count; i++)
                     {
-                        listBox_Colours.SelectedItems.Add(items[i]);
+                        if (!listBox_Colours.SelectedItems.Contains(items[i]))
+                            listBox_Colours.SelectedItems.Add(items[i]);
                     }
                 }
             }
