@@ -29,6 +29,9 @@ namespace SpriteSheetGenerator
             {
                 return filename;
             }
+
+            public static implicit operator Image(ImagePath imgPath) => imgPath.image;
+            public static implicit operator PictureBox(ImagePath imgPath) => imgPath.pb;
         }
 
         #endregion
@@ -91,6 +94,7 @@ namespace SpriteSheetGenerator
             rotationControls.Add(checkBox_MirrrorX);
             rotationControls.Add(checkBox_MirrorY);
 
+
             // External tools
             hex2ColourPath = Directory.EnumerateFiles(Environment.CurrentDirectory).FirstOrDefault(x => Path.GetFileName(x) == "Hex2Colour.exe");
             hex2ColourToolStripMenuItem.Enabled = hex2ColourPath != null;
@@ -116,41 +120,49 @@ namespace SpriteSheetGenerator
                 sep = "|";
             }
 
+            //Events
+            panel_SpriteSheet.MouseWheel += Trackbar_MouseWheel;
+            trackBar_ScaleSheet.MouseWheel += Trackbar_MouseWheel;
+            flowLayoutPanel_Sprites.MouseWheel += Trackbar_MouseWheel;
+            trackBar_ScaleImages.MouseWheel += Trackbar_MouseWheel;
         }
 
         #endregion
 
         #region Methods
 
-        private void AddPreviewImage(ImagePath imagePath)
+        private void AddPreviewImage(ImagePath imgPath)
         {
-            if (imagePath.pb == null)
+            if (imgPath.pb == null)
             {
                 PictureBox pb = new PictureBox
                 {
                     BackgroundImageLayout = ImageLayout.Stretch,
-                    BackgroundImage = imagePath.image,
-                    Size = Util.ScaleSize(imagePath.image.Size, scaleImages)
+                    BackgroundImage = imgPath,
+                    Size = Util.ScaleSize(imgPath.image.Size, scaleImages)
                 };
 
-                imagePath.pb = pb;
+                imgPath.pb = pb;
             }
 
-            if (flowLayoutPanel_Sprites.Controls.Contains(imagePath.pb))
-                flowLayoutPanel_Sprites.Controls.Remove(imagePath.pb);
+            if (flowLayoutPanel_Sprites.Controls.Contains(imgPath))
+                flowLayoutPanel_Sprites.Controls.Remove(imgPath);
 
-            flowLayoutPanel_Sprites.Controls.Add(imagePath.pb);
+            flowLayoutPanel_Sprites.Controls.Add(imgPath);
         }
 
         private void SetControlsEnabled()
         {
             button_Generate.Enabled = images.Count > 0;
             exportToolStripMenuItem1.Enabled = pictureBox_SpriteSheet.BackgroundImage != null;
-
         }
 
         private void OpenImage(string filename)
         {
+            //Dont allow duplicates
+            if (images.Any(x => x.filename == filename))
+                return;
+
             Image image;
 
             try
@@ -162,16 +174,16 @@ namespace SpriteSheetGenerator
                 return;
             }
 
-            ImagePath imagePath = new ImagePath()
+            ImagePath imgPath = new ImagePath()
             {
                 image = image,
                 path = filename,
                 filename = Path.GetFileName(filename),
             };
 
-            listBox_Paths.Items.Add(imagePath);
-            images.Add(imagePath);
-            AddPreviewImage(imagePath);
+            listBox_Paths.Items.Add(imgPath);
+            images.Add(imgPath);
+            AddPreviewImage(imgPath);
             SetControlsEnabled();
         }
 
@@ -193,13 +205,13 @@ namespace SpriteSheetGenerator
         private void MoveImageOrder(int oldIndex, int newIndex)
         {
 
-            ImagePath imagePath = (ImagePath)listBox_Paths.Items[oldIndex];
+            ImagePath imgPath = (ImagePath)listBox_Paths.Items[oldIndex];
             listBox_Paths.Items.RemoveAt(oldIndex);
-            listBox_Paths.Items.Insert(newIndex, imagePath);
+            listBox_Paths.Items.Insert(newIndex, imgPath);
             listBox_Paths.SelectedIndex = newIndex;
 
-            images.Remove(imagePath);
-            images.Insert(newIndex, imagePath);
+            images.Remove(imgPath);
+            images.Insert(newIndex, imgPath);
         }
 
         private void RefreshPreviewPanel()
@@ -266,7 +278,23 @@ namespace SpriteSheetGenerator
             }
         }
 
+        private void SaveSheet()
+        {
+            DialogResult result = sfd.ShowDialog();
 
+            if (result != DialogResult.OK) return;
+
+            ImageFormat? format = Util.GetImageFormat(Path.GetExtension(sfd.FileName).Trim('.'));
+
+            if (format == null)
+            {
+                MessageBox.Show("Invalid Image Format");
+                return;
+            }
+
+            sheet.Save(sfd.FileName, format);
+            sheetUnsaved = false;
+        }
 
         #endregion
 
@@ -448,9 +476,9 @@ namespace SpriteSheetGenerator
         {
             scaleImages = trackBar_ScaleImages.Value / 10.0;
 
-            foreach (ImagePath imagePath in images)
+            foreach (ImagePath imgPath in images)
             {
-                imagePath.pb.Size = Util.ScaleSize(imagePath.image.Size, scaleImages);
+                imgPath.pb.Size = Util.ScaleSize(imgPath.image.Size, scaleImages);
             }
         }
 
@@ -502,20 +530,7 @@ namespace SpriteSheetGenerator
         {
             if (sheet == null) return;
 
-            DialogResult result = sfd.ShowDialog();
-
-            if (result != DialogResult.OK) return;
-
-            ImageFormat? format = Util.GetImageFormat(Path.GetExtension(sfd.FileName).Trim('.'));
-
-            if (format == null)
-            {
-                MessageBox.Show("Invalid Image Format");
-                return;
-            }
-
-            sheet.Save(sfd.FileName, format);
-            sheetUnsaved = false;
+            SaveSheet();
         }
 
         private void closeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -527,7 +542,16 @@ namespace SpriteSheetGenerator
         {
             if (sheetUnsaved)
             {
-                e.Cancel = MessageBox.Show("Are you sure you want to quit before saving?", "Sheet was not saved", MessageBoxButtons.YesNo) == DialogResult.No;
+                DialogResult result = MessageBox.Show("Do you want to save before quitting?", "Sheet was not saved", MessageBoxButtons.YesNoCancel);
+
+                if (result == DialogResult.Yes)
+                {
+                    SaveSheet();
+                }
+                else if (result == DialogResult.Cancel)
+                {
+                    e.Cancel = true;
+                }
             }
         }
 
@@ -547,6 +571,41 @@ namespace SpriteSheetGenerator
                 hex2ColourToolStripMenuItem.Enabled = false;
             }
 
+        }
+
+        private void Trackbar_MouseWheel(object? sender, MouseEventArgs e)
+        {
+            TrackBar trackbar;
+
+            if (sender.GetType() == typeof(TrackBar))
+            {
+                trackbar = (TrackBar)sender;
+            }
+            else
+            {
+                if (sender == panel_SpriteSheet)
+                    trackbar = trackBar_ScaleSheet;
+                else if (sender == flowLayoutPanel_Sprites)
+                    trackbar = trackBar_ScaleImages;
+                else
+                    return;
+            }
+
+            int dir = e.Delta > 0 ? 1 : -1;
+            int newValue = trackbar.Value + (dir * trackbar.SmallChange /*trackbar.TickFrequency*/);
+
+            if (newValue > trackbar.Maximum)
+            {
+                trackbar.Value = trackbar.Maximum;
+            }
+            else if (newValue < trackbar.Minimum)
+            {
+                trackbar.Value = trackbar.Minimum;
+            }
+            else
+            {
+                trackbar.Value = newValue;
+            }
         }
 
         #endregion

@@ -1,4 +1,4 @@
-namespace Hex2Colour
+namespace SpriteSheetGenerator
 {
     internal static class Program
     {
