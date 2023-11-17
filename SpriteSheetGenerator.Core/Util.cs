@@ -1,4 +1,5 @@
 ﻿#pragma warning disable IDE0090 // Use 'new(...)'
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
 using System.Diagnostics;
 using System.Drawing.Imaging;
 using System.Reflection;
@@ -7,6 +8,15 @@ namespace SpriteSheetGenerator
 {
     public static class Util
     {
+        public static bool AllImagesSameSize(params Image[] images)
+        {
+            if (images.Length == 1)
+                return true;
+
+            int width = images[0].Width;
+            int height = images[0].Height;
+            return images.All(x => x.Width == width || x.Height == height);
+        }
 
         public static Size GetAverageSize(params Size[] sizes)
         {
@@ -24,6 +34,7 @@ namespace SpriteSheetGenerator
 
         public static ImageFormat[] GetAllImageFormats()
         {
+#pragma warning disable 8604
             List<ImageFormat> formats = new List<ImageFormat>();
 
             var imageFormatFields = typeof(ImageFormat).GetFields(BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.SuppressChangeType);
@@ -31,10 +42,12 @@ namespace SpriteSheetGenerator
             foreach (var item in imageFormatFields)
             {
                 ImageFormat format = (ImageFormat)item.GetValue(null);
+
                 formats.Add(format);
             }
 
             return formats.ToArray();
+#pragma warning restore 8604
         }
 
         public static ImageFormat? GetImageFormat(string extension)
@@ -70,3 +83,4 @@ namespace SpriteSheetGenerator
     }
 }
 #pragma warning restore IDE0090 // Use 'new(...)'
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.

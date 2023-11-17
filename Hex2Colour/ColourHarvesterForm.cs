@@ -50,6 +50,13 @@ namespace Hex2Colour
 
         void HarvestColours(string text)
         {
+            if (text == string.Empty) return;
+
+            if (!checkBox_Append.Checked)
+            {
+                listBox_Colours.Items.Clear();
+            }
+
             try
             {
                 string pattern = textBox_CustomPattern.Text != string.Empty ? textBox_CustomPattern.Text : $"({NotationPatten}((?:[0-9a-fA-F]{{6}})|(?:[0-9a-fA-F]{{8}})))";
@@ -107,12 +114,12 @@ namespace Hex2Colour
             }
         }
 
-        private void button_Grab_Click(object sender, EventArgs e)
+        private void button_Harvest_Click(object sender, EventArgs e)
         {
             HarvestColours(textBox_Text.Text);
         }
 
-        private void button_Harvest_Click(object sender, EventArgs e)
+        private void button_Download_Click(object sender, EventArgs e)
         {
             DownloadText();
 
@@ -153,17 +160,17 @@ namespace Hex2Colour
                     string colours = string.Join("\r\n", listBox_Colours.SelectedItems.OfType<string>().ToArray());
                     Clipboard.SetText(colours);
                 }
-                else if(e.KeyCode == Keys.X)
+                else if (e.KeyCode == Keys.X)
                 {
                     string colours = string.Join("\r\n", listBox_Colours.SelectedItems.OfType<string>().ToArray());
                     Clipboard.SetText(colours);
                     DeleteSelectedColourItems();
                 }
-                else if(e.KeyCode == Keys.A)
+                else if (e.KeyCode == Keys.A)
                 {
                     var items = listBox_Colours.Items;
 
-                    for(int i = 0; i < items.Count; i++)
+                    for (int i = 0; i < items.Count; i++)
                     {
                         if (!listBox_Colours.SelectedItems.Contains(items[i]))
                             listBox_Colours.SelectedItems.Add(items[i]);
@@ -191,6 +198,13 @@ namespace Hex2Colour
                     comboBox_Specifier.Items.Remove(spec);
                 }
             }
+        }
+
+        private void textBox_Text_TextChanged(object sender, EventArgs e)
+        {
+            if (!checkBox_AutoHarvest.Checked) return;
+
+            HarvestColours(textBox_Text.Text);
         }
     }
 }

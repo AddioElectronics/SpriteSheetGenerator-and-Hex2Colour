@@ -41,6 +41,8 @@
             comboBox_Specifier = new ComboBox();
             checkBox_RequireNotation = new CheckBox();
             textBox_CustomPattern = new TextBox();
+            checkBox_AutoHarvest = new CheckBox();
+            checkBox_Append = new CheckBox();
             SuspendLayout();
             // 
             // button_Harvest
@@ -52,7 +54,7 @@
             button_Harvest.TabIndex = 1;
             button_Harvest.Text = "Harvest";
             button_Harvest.UseVisualStyleBackColor = true;
-            button_Harvest.Click += button_Grab_Click;
+            button_Harvest.Click += button_Harvest_Click;
             // 
             // listBox_Colours
             // 
@@ -86,6 +88,7 @@
             textBox_Text.ScrollBars = ScrollBars.Both;
             textBox_Text.Size = new Size(1209, 652);
             textBox_Text.TabIndex = 4;
+            textBox_Text.TextChanged += textBox_Text_TextChanged;
             // 
             // button_Clear
             // 
@@ -133,13 +136,13 @@
             button_Download.TabIndex = 9;
             button_Download.Text = "Download";
             button_Download.UseVisualStyleBackColor = true;
-            button_Download.Click += button_Harvest_Click;
+            button_Download.Click += button_Download_Click;
             // 
             // comboBox_Specifier
             // 
             comboBox_Specifier.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             comboBox_Specifier.FormattingEnabled = true;
-            comboBox_Specifier.Location = new Point(1181, 702);
+            comboBox_Specifier.Location = new Point(877, 704);
             comboBox_Specifier.Name = "comboBox_Specifier";
             comboBox_Specifier.Size = new Size(121, 23);
             comboBox_Specifier.TabIndex = 10;
@@ -152,7 +155,7 @@
             checkBox_RequireNotation.AutoSize = true;
             checkBox_RequireNotation.Checked = true;
             checkBox_RequireNotation.CheckState = CheckState.Checked;
-            checkBox_RequireNotation.Location = new Point(1054, 704);
+            checkBox_RequireNotation.Location = new Point(1004, 705);
             checkBox_RequireNotation.Name = "checkBox_RequireNotation";
             checkBox_RequireNotation.Size = new Size(121, 19);
             checkBox_RequireNotation.TabIndex = 11;
@@ -162,17 +165,43 @@
             // textBox_CustomPattern
             // 
             textBox_CustomPattern.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            textBox_CustomPattern.Location = new Point(621, 702);
+            textBox_CustomPattern.Location = new Point(433, 704);
             textBox_CustomPattern.Name = "textBox_CustomPattern";
             textBox_CustomPattern.PlaceholderText = "Optional custom regex pattern";
             textBox_CustomPattern.Size = new Size(427, 23);
             textBox_CustomPattern.TabIndex = 12;
             // 
-            // ColourHarvester
+            // checkBox_AutoHarvest
+            // 
+            checkBox_AutoHarvest.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            checkBox_AutoHarvest.AutoSize = true;
+            checkBox_AutoHarvest.Checked = true;
+            checkBox_AutoHarvest.CheckState = CheckState.Checked;
+            checkBox_AutoHarvest.Location = new Point(1205, 705);
+            checkBox_AutoHarvest.Name = "checkBox_AutoHarvest";
+            checkBox_AutoHarvest.Size = new Size(97, 19);
+            checkBox_AutoHarvest.TabIndex = 13;
+            checkBox_AutoHarvest.Text = "Auto-Harvest";
+            checkBox_AutoHarvest.UseVisualStyleBackColor = true;
+            // 
+            // checkBox_Append
+            // 
+            checkBox_Append.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            checkBox_Append.AutoSize = true;
+            checkBox_Append.Location = new Point(1131, 705);
+            checkBox_Append.Name = "checkBox_Append";
+            checkBox_Append.Size = new Size(68, 19);
+            checkBox_Append.TabIndex = 14;
+            checkBox_Append.Text = "Append";
+            checkBox_Append.UseVisualStyleBackColor = true;
+            // 
+            // ColourHarvesterForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1395, 736);
+            Controls.Add(checkBox_Append);
+            Controls.Add(checkBox_AutoHarvest);
             Controls.Add(textBox_CustomPattern);
             Controls.Add(checkBox_RequireNotation);
             Controls.Add(comboBox_Specifier);
@@ -185,7 +214,7 @@
             Controls.Add(listBox_Colours);
             Controls.Add(button_Harvest);
             MinimumSize = new Size(410, 300);
-            Name = "ColourHarvester";
+            Name = "ColourHarvesterForm";
             Text = "Colour Harvester";
             FormClosing += HttpGrabber_FormClosing;
             ResumeLayout(false);
@@ -207,5 +236,7 @@
         private ComboBox comboBox_Specifier;
         private CheckBox checkBox_RequireNotation;
         private TextBox textBox_CustomPattern;
+        private CheckBox checkBox_AutoHarvest;
+        private CheckBox checkBox_Append;
     }
 }

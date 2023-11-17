@@ -29,11 +29,10 @@ namespace Hex2Colour
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
             button_Convert = new Button();
             textIn = new TextBox();
             textOut = new TextBox();
-            menuStrip1 = new MenuStrip();
+            menuStrip = new MenuStrip();
             fileToolStripMenuItem = new ToolStripMenuItem();
             importSettingsToolStripMenuItem = new ToolStripMenuItem();
             closeToolStripMenuItem = new ToolStripMenuItem();
@@ -45,10 +44,9 @@ namespace Hex2Colour
             splitContainer = new SplitContainer();
             textBox_NameFormat = new TextBox();
             label_NameFormat = new Label();
-            toolTip1 = new ToolTip(components);
             button_Append = new Button();
             button_Clear = new Button();
-            menuStrip1.SuspendLayout();
+            menuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer).BeginInit();
             splitContainer.Panel1.SuspendLayout();
             splitContainer.Panel2.SuspendLayout();
@@ -84,14 +82,14 @@ namespace Hex2Colour
             textOut.Size = new Size(610, 456);
             textOut.TabIndex = 2;
             // 
-            // menuStrip1
+            // menuStrip
             // 
-            menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, toolsToolStripMenuItem, settingsToolStripMenuItem, helpToolStripMenuItem });
-            menuStrip1.Location = new Point(0, 0);
-            menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(942, 24);
-            menuStrip1.TabIndex = 3;
-            menuStrip1.Text = "menuStrip1";
+            menuStrip.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, toolsToolStripMenuItem, settingsToolStripMenuItem, helpToolStripMenuItem });
+            menuStrip.Location = new Point(0, 0);
+            menuStrip.Name = "menuStrip";
+            menuStrip.Size = new Size(942, 24);
+            menuStrip.TabIndex = 3;
+            menuStrip.Text = "menuStrip1";
             // 
             // fileToolStripMenuItem
             // 
@@ -219,14 +217,14 @@ namespace Hex2Colour
             Controls.Add(textBox_NameFormat);
             Controls.Add(splitContainer);
             Controls.Add(button_Convert);
-            Controls.Add(menuStrip1);
+            Controls.Add(menuStrip);
             MinimumSize = new Size(550, 300);
             Name = "MainForm";
             ShowIcon = false;
             Text = "Hex2Colour";
             FormClosing += Hex2ColourForm_FormClosing;
-            menuStrip1.ResumeLayout(false);
-            menuStrip1.PerformLayout();
+            menuStrip.ResumeLayout(false);
+            menuStrip.PerformLayout();
             splitContainer.Panel1.ResumeLayout(false);
             splitContainer.Panel1.PerformLayout();
             splitContainer.Panel2.ResumeLayout(false);
@@ -242,12 +240,11 @@ namespace Hex2Colour
         private Button button_Convert;
         private TextBox textIn;
         private TextBox textOut;
-        private MenuStrip menuStrip1;
+        private MenuStrip menuStrip;
         private ToolStripMenuItem helpToolStripMenuItem;
         private SplitContainer splitContainer;
         private TextBox textBox_NameFormat;
         private Label label_NameFormat;
-        private ToolTip toolTip1;
         private Button button_Append;
         private ToolStripMenuItem settingsToolStripMenuItem;
         private ToolStripMenuItem fileToolStripMenuItem;
