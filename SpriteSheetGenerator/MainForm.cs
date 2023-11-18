@@ -701,9 +701,9 @@ namespace SpriteSheetGenerator
                 return;
             }
 
-            if (genImagesUnsaved)
+            if (notificationsEnabled && genImagesUnsaved)
             {
-                DialogResult result = MessageBox.Show("Do you want to save before generating?", "Generated images not saved", MessageBoxButtons.YesNoCancel);
+                DialogResult result = MessageBox.Show("Do you want to save before generating?\r\n\r\nNotifications can be disabled in Tools->Options", "Generated images not saved", MessageBoxButtons.YesNoCancel);
 
                 if (result == DialogResult.Yes)
                 {
@@ -719,9 +719,9 @@ namespace SpriteSheetGenerator
             {
                 DialogResult result;
                 if (PackSprites)
-                    result = MessageBox.Show("All your images are the same size.\r\nYou may get better results with \"Pack Sprites\" turned off.\r\n\r\nDo you want to disable before generating?", "Disabling \"Pack Sprites\" may produce better results", MessageBoxButtons.YesNoCancel);
+                    result = MessageBox.Show("All your images are the same size.\r\nYou may get better results with \"Pack Sprites\" turned off.\r\n\r\nDo you want to disable before generating?\r\n\r\nNotifications can be disabled in Tools->Options", "Disabling \"Pack Sprites\" may produce better results", MessageBoxButtons.YesNoCancel);
                 else
-                    result = MessageBox.Show("Your images contain different sizes.\r\nYou may get better results with \"Pack Sprites\" turned on.\r\n\r\nDo you want to enable before generating?", "Enabling \"Pack Sprites\" may produce better results", MessageBoxButtons.YesNoCancel);
+                    result = MessageBox.Show("Your images contain different sizes.\r\nYou may get better results with \"Pack Sprites\" turned on.\r\n\r\nDo you want to enable before generating?\r\n\r\nNotifications can be disabled in Tools->Options", "Enabling \"Pack Sprites\" may produce better results", MessageBoxButtons.YesNoCancel);
 
 
                 if (result == DialogResult.Yes)
@@ -735,13 +735,6 @@ namespace SpriteSheetGenerator
 
             }
 
-            SpriteSheetGenerator generator = new SpriteSheetGenerator(images.Select(x => x.image).ToArray(), RotationsAndFlips)
-            {
-                PixelFormat = SelectedPixelFormat,
-                AlignVertically = AlignVertically,
-                EqualSpacing = EqualSpacing
-            };
-
             DeleteGeneratedImages();
             Image sheetImage;
 
@@ -750,8 +743,8 @@ namespace SpriteSheetGenerator
                 /// Attempt to create the sprite sheet.
                 /// May fail when using a lot of images with CreateSheetPacked().
                 sheetImage = PackSprites ?
-                    generator.CreateSheetPacked() :
-                    generator.CreateSheet();
+                    SpriteSheetGenerator.CreateSheetPacked(images.Select(x => x.image).ToArray(), SelectedPixelFormat, RotationsAndFlips) :
+                    SpriteSheetGenerator.CreateSheet(images.Select(x => x.image).ToArray(), AlignVertically, EqualSpacing, SelectedPixelFormat, RotationsAndFlips);
             }
             catch (Exception ex)
             {
