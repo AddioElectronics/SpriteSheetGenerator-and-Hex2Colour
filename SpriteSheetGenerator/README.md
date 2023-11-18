@@ -25,6 +25,6 @@ Simple basic tool for rotating, mirroring, and combining sprites into a single s
 - Author : Addio
 - Website : www.Addio.io
 
-[License]:https://github.com/AddioElectronics/SpriteSheetGenerator/blob/master/LICENSE
+[License]:https://github.com/AddioElectronics/SpriteSheetGenerator-and-Hex2Colour/blob/main/LICENSE
 [RectPacker]:https://github.com/am11/RectanglePacker
 

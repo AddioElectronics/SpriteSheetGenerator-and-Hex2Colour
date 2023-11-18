@@ -25,8 +25,13 @@ A simple tool for converting Hex values into code and extracting color hex value
 
 ## Images
 <details closed>
-  <summary></summary>
-    <IMG src=""/>
+  <summary>Hex2Colour Examples</summary>
+    <IMG src="https://github.com/AddioElectronics/SpriteSheetGenerator-and-Hex2Colour/blob/main/Hex2Colour/Images/hex2col.png?raw=true"/>
+</details>
+
+<details closed>
+  <summary>Colour Harvestor Example</summary>
+    <IMG src="https://github.com/AddioElectronics/SpriteSheetGenerator-and-Hex2Colour/blob/main/Hex2Colour/Images/colourharvestor.png?raw=true"/>
 </details>
 
 ## Usage
@@ -187,5 +192,5 @@ Add a C# style format string to the `Name Format` textbox.
 - Author : Addio
 - Website : www.Addio.io
 
-[License]:https://github.com/AddioElectronics/SpriteSheetGenerator/blob/master/LICENSE
+[License]:https://github.com/AddioElectronics/SpriteSheetGenerator-and-Hex2Colour/blob/main/LICENSE
 

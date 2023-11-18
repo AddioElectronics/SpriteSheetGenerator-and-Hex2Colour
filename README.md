@@ -32,7 +32,7 @@ Its actually pretty feature rich for what its purpose is, more info in its [dedi
 - Author : Addio
 - Website : www.Addio.io
 
-[Hex2Col]:https://github.com/AddioElectronics/SpriteSheetGenerator/blob/master/Hex2Colour
-[SPG]:https://github.com/AddioElectronics/SpriteSheetGenerator/blob/master/SpriteSheetGenerator
-[License]:https://github.com/AddioElectronics/SpriteSheetGenerator/blob/master/LICENSE
+[Hex2Col]:https://github.com/AddioElectronics/SpriteSheetGenerator-and-Hex2Colour/tree/main/Hex2Colour
+[SPG]:https://github.com/AddioElectronics/SpriteSheetGenerator-and-Hex2Colour/tree/main/SpriteSheetGenerator
+[License]:https://github.com/AddioElectronics/SpriteSheetGenerator-and-Hex2Colour/blob/main/LICENSE
 
