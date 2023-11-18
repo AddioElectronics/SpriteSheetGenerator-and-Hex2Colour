@@ -27,9 +27,9 @@ namespace SpriteSheetGenerator
             this.pb = pb;
         }
 
-        public ImagePath(Bitmap bitmap, string origFilename, RotateFlipType flipType)
+        public ImagePath(Image image, string origFilename, RotateFlipType flipType)
         {
-            image = bitmap;
+            this.image = image;
             filename = Path.GetFileNameWithoutExtension(origFilename) + MainForm.rotateFlipNames[flipType];
         }
 #pragma warning restore 8618

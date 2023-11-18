@@ -47,7 +47,6 @@ namespace SpriteSheetGenerator
             return validPixelFormats.Contains(format);
         }
 
-
         /// <summary>
         /// Rotates the <paramref name="bitmaps"/> by <paramref name="flipType"/>, and returns a new array with the rotated bitmaps.
         /// </summary>

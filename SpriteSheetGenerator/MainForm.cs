@@ -673,7 +673,7 @@ namespace SpriteSheetGenerator
 
             foreach (ImagePath imgPath in images)
             {
-                Bitmap[]? variants = SpriteSheetGenerator.GenerateBitmapVariations(imgPath, pixelFormat, flipTypes);
+                Image[]? variants = SpriteSheetGenerator.GenerateBitmapVariations(imgPath, pixelFormat, flipTypes);
 
                 for (int i = 0; i < variants.Length; i++)
                 {
