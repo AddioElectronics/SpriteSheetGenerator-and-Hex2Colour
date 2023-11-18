@@ -280,7 +280,7 @@
             richTextBox3.TabIndex = 14;
             richTextBox3.Text = resources.GetString("richTextBox3.Text");
             // 
-            // Hex2ColourHelp
+            // HelpForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -290,7 +290,7 @@
             MaximumSize = new Size(652, 400);
             MinimizeBox = false;
             MinimumSize = new Size(500, 400);
-            Name = "Hex2ColourHelp";
+            Name = "HelpForm";
             Text = "Hex2ColourHelp";
             tabControl.ResumeLayout(false);
             General.ResumeLayout(false);

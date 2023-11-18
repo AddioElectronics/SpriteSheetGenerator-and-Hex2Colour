@@ -5,6 +5,7 @@
         public HelpForm()
         {
             InitializeComponent();
+            Icon = Util.MakeTransparentIcon(Resource.icon);
         }
     }
 }

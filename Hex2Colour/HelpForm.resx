@@ -144,13 +144,12 @@ Formatters
   <data name="richTextBox2.Text" xml:space="preserve">
     <value>You may not want to have a format infront of some of the names,
 or the opposite and only want to select which names are formatted.
-So 2 symbols and the option AlwaysFormatNames was added, 
-to give both options.
-
-The 2 symbols are...
+The % and ! symbol will affect if a name is formatted or not.
+You also might want to write a comment but no name, to do this just add a # instead of a name.
 
 %	: Causes a name to be formatted
-!	: Stops a name from being formatted</value>
+!	: Stops a name from being formatted
+#	: Skip name for comment (format + index)</value>
   </data>
   <data name="textBox10.Text" xml:space="preserve">
     <value>const COLORREF Green = 0x00FF00;

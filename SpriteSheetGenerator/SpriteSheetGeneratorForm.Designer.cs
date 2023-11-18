@@ -688,11 +688,9 @@
             Controls.Add(splitContainer_Images);
             Controls.Add(panel_Settings);
             Controls.Add(menuStrip);
-            Icon = (Icon)resources.GetObject("$this.Icon");
             MainMenuStrip = menuStrip;
             MinimumSize = new Size(683, 348);
             Name = "MainForm";
-            ShowIcon = false;
             Text = "Sprite Sheet Generator";
             FormClosing += PalettizerForm_FormClosing;
             DragDrop += MainForm_DragDrop;

@@ -1,60 +1,30 @@
-# SpriteSheetGenerator (And Hex2Colour)
+# SpriteSheetGenerator
 ---
 #### `V1.0.0`
 
-
-**SpriteSheetGenerator**
-
 Simple basic tool for rotating, mirroring, and combining sprites into a single sheet.
 
-Can create every rotation/mirror combination and adds them to their own column or row.
 
-**HEX2Colour**
+## Features
+- Generate rotated and mirrored variants
+- Combines images in to sprite sheet
+    - Align bitmaps sequentially with variants
+    - Pack bitmaps efficiently
 
-An even more basic simple tool that helps with copying HEX colours from the web to your program.
+## Repositories
 
-Hate having to swap red and blue channel when working with GDI? 
-
-Just copy your HEX values into the textbox and click convert. 
-
-For each colour it will optionally swap the channels and format it as code.
-
-Turns `FF0000` into `const COLORREF colour0 = 0x0000FF;`
-or
-`FF0000` into `Color colour0 = Color.FromArgb(0xFF0000);` depending on the settings.
-
-
-
-Also has the ability to add them directly into an array.
-
-##### Features
-- 
-
-##### Images
-<details closed>
-  <summary></summary>
-    <IMG src=""/>
-</details>
-
-
-## Usage
----
-#### 
-- 
-
-## Building/Debugging
----
-#### Windows
-
-Its a simple basic winforms program, just open the solution and press play.
+- [RectanglePacker][RectPacker]
+    - By Matt Perdeck
+    - Imported from Nuget
 
 ## License
----
-- []()
+
+- [GNU GPLv3][License]
 ## Author
----
+
 - Author : Addio
 - Website : www.Addio.io
 
-[]:https:/
+[License]:https://github.com/AddioElectronics/SpriteSheetGenerator/blob/master/LICENSE
+[RectPacker]:https://github.com/am11/RectanglePacker
 

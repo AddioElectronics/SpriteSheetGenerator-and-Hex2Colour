@@ -1,0 +1,20 @@
+﻿[
+  {
+    "name": "C/C++ GDI",
+    "lang": "c",
+    "lib": "gdi",
+    "format": "const COLORREF {0} = 0x{1:X6}",
+    "arrayStart": "const COLORREF {0}[] = \r\n{{\r\n",
+    "arrayItem": "\t0x{0:X6}",
+    "arrayEnd": "\r\n};\r\n"
+  },
+  {
+    "name": "C# System.Drawing",
+    "lang": "c#",
+    "lib": "system.drawing",
+    "format": "Color {0} = Color.FromArgb(0x{1:X6})",
+    "arrayStart": "Color[] {0} = new Color[]\r\n{{\r\n",
+    "arrayItem": "\tColor.FromArgb(0x{0:X6})",
+    "arrayEnd": "\r\n};\r\n"
+  }
+]

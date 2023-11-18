@@ -169,6 +169,9 @@ namespace SpriteSheetGenerator
             trackBar_ScaleSheet.MouseWheel += Trackbar_MouseWheel;
             flowLayoutPanel_Sprites.MouseWheel += Trackbar_MouseWheel;
             trackBar_ScaleImages.MouseWheel += Trackbar_MouseWheel;
+
+            Icon = Util.MakeTransparentIcon(Resource.icon);
+            ShowIcon = true;
         }
 
         #endregion
@@ -780,7 +783,7 @@ namespace SpriteSheetGenerator
                     Size = Util.ScaleSize(sheetImage.Size, scaleSheet)
                 },
             };
-            flowLayoutPanel_Generated.Controls.Add( sheet );
+            flowLayoutPanel_Generated.Controls.Add(sheet);
             genImagesUnsaved = true;
             UpdateControlsGenerated();
         }
@@ -817,7 +820,7 @@ namespace SpriteSheetGenerator
 
         private void helpToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Util.OpenUrl("https://github.com/AddioElectronics/Hex2Colour");
+            Util.OpenUrl("https://github.com/AddioElectronics/SpriteSheetGenerator");
         }
 
         private void hex2ColourToolStripMenuItem_Click(object sender, EventArgs e)

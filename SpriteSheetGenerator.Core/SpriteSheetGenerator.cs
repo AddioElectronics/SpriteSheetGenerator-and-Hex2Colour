@@ -1,9 +1,5 @@
 ﻿using Mapper;
 using SpriteSheetGenerator.Packing;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.Security.Cryptography;
 using Image = System.Drawing.Image;
 
 namespace SpriteSheetGenerator
@@ -217,7 +213,9 @@ namespace SpriteSheetGenerator
             //Generate variants and group them in separate lists.
             List<Image>[] spriteGroups = BeginSheet(images, pixelFormat, rotateFlipTypes, out Image[] sprites);
 
-            return CreateSheet(spriteGroups, alignVertically, equalSpacing, pixelFormat);
+            Image sheet = CreateSheet(spriteGroups, alignVertically, equalSpacing, pixelFormat);
+            DisposeGeneratedImages(images, sprites);
+            return sheet;
         }
 
         /// <summary>
@@ -276,6 +274,8 @@ namespace SpriteSheetGenerator
                 //Apply the graphics
                 g.Save();
             }
+
+            DisposeGeneratedImages(images, sprites);
 
             return sheet;
         }
@@ -397,6 +397,27 @@ namespace SpriteSheetGenerator
                 //First index of the internal list contains the original bitmap
                 var bitmaps = GenerateBitmapVariations(spriteGroups[i][0], pixelFormat, rotateFlipTypes);
                 spriteGroups[i].AddRange(bitmaps);
+            }
+        }
+
+        /// <summary>
+        /// Dispose all generated images.
+        /// </summary>
+        /// <param name="originals">Original images, used check if image should be disposed.</param>
+        /// <param name="sprites">Original and generated images.</param>
+        static void DisposeGeneratedImages(Image[] originals, Image[] sprites)
+        {
+            int originalsSeen = 0;
+            foreach(var image in sprites)
+            {
+                //Only check if there are still originals left.
+                if (originalsSeen < originals.Length && originals.Contains(image))
+                {
+                    originalsSeen++;
+                    continue;
+                }
+
+                image.Dispose();
             }
         }
 

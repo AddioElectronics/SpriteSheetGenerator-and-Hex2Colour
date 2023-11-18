@@ -1,7 +1,7 @@
 ﻿
 namespace Hex2Colour
 {
-    partial class MainForm
+    partial class Hex2ColourForm
     {
         /// <summary>
         ///  Required designer variable.
@@ -29,6 +29,7 @@ namespace Hex2Colour
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Hex2ColourForm));
             button_Convert = new Button();
             textIn = new TextBox();
             textOut = new TextBox();
@@ -70,7 +71,9 @@ namespace Hex2Colour
             textIn.Location = new Point(0, 0);
             textIn.Multiline = true;
             textIn.Name = "textIn";
-            textIn.Size = new Size(304, 456);
+            textIn.PlaceholderText = "Paste hex values here, or use \"Tools->Colour Harvestor\"";
+            textIn.ScrollBars = ScrollBars.Both;
+            textIn.Size = new Size(325, 456);
             textIn.TabIndex = 1;
             // 
             // textOut
@@ -79,7 +82,8 @@ namespace Hex2Colour
             textOut.Location = new Point(0, 0);
             textOut.Multiline = true;
             textOut.Name = "textOut";
-            textOut.Size = new Size(610, 456);
+            textOut.PlaceholderText = "Code will be output here...";
+            textOut.Size = new Size(604, 456);
             textOut.TabIndex = 2;
             // 
             // menuStrip
@@ -87,7 +91,7 @@ namespace Hex2Colour
             menuStrip.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, toolsToolStripMenuItem, settingsToolStripMenuItem, helpToolStripMenuItem });
             menuStrip.Location = new Point(0, 0);
             menuStrip.Name = "menuStrip";
-            menuStrip.Size = new Size(942, 24);
+            menuStrip.Size = new Size(957, 24);
             menuStrip.TabIndex = 3;
             menuStrip.Text = "menuStrip1";
             // 
@@ -160,14 +164,14 @@ namespace Hex2Colour
             // splitContainer.Panel2
             // 
             splitContainer.Panel2.Controls.Add(textOut);
-            splitContainer.Size = new Size(918, 456);
-            splitContainer.SplitterDistance = 304;
+            splitContainer.Size = new Size(933, 456);
+            splitContainer.SplitterDistance = 325;
             splitContainer.TabIndex = 4;
             // 
             // textBox_NameFormat
             // 
             textBox_NameFormat.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            textBox_NameFormat.Location = new Point(720, 511);
+            textBox_NameFormat.Location = new Point(735, 511);
             textBox_NameFormat.Name = "textBox_NameFormat";
             textBox_NameFormat.PlaceholderText = "Ex. g_colour{0}";
             textBox_NameFormat.Size = new Size(210, 23);
@@ -178,7 +182,7 @@ namespace Hex2Colour
             // 
             label_NameFormat.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             label_NameFormat.AutoSize = true;
-            label_NameFormat.Location = new Point(720, 493);
+            label_NameFormat.Location = new Point(735, 493);
             label_NameFormat.Name = "label_NameFormat";
             label_NameFormat.Size = new Size(80, 15);
             label_NameFormat.TabIndex = 11;
@@ -187,7 +191,7 @@ namespace Hex2Colour
             // button_Append
             // 
             button_Append.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            button_Append.Location = new Point(165, 489);
+            button_Append.Location = new Point(150, 489);
             button_Append.Name = "button_Append";
             button_Append.Size = new Size(132, 26);
             button_Append.TabIndex = 13;
@@ -206,11 +210,11 @@ namespace Hex2Colour
             button_Clear.UseVisualStyleBackColor = true;
             button_Clear.Click += button_Clear_Click;
             // 
-            // MainForm
+            // Hex2ColourForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(942, 553);
+            ClientSize = new Size(957, 553);
             Controls.Add(button_Clear);
             Controls.Add(button_Append);
             Controls.Add(label_NameFormat);
@@ -218,8 +222,9 @@ namespace Hex2Colour
             Controls.Add(splitContainer);
             Controls.Add(button_Convert);
             Controls.Add(menuStrip);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             MinimumSize = new Size(550, 300);
-            Name = "MainForm";
+            Name = "Hex2ColourForm";
             ShowIcon = false;
             Text = "Hex2Colour";
             FormClosing += Hex2ColourForm_FormClosing;

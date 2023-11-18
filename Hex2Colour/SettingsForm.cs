@@ -29,11 +29,6 @@ namespace Hex2Colour
 
         #region Properties/Fields
 
-        internal static readonly Dictionary<string, LangsApis> langs = new Dictionary<string, LangsApis>()
-        {
-            {"C/C++ GDI", LangsApis.C_GDI},
-            {"C# System.Drawing",  LangsApis.CSHARP_SYSDRAW}
-        };
 
 
         /// <summary>
@@ -65,9 +60,10 @@ namespace Hex2Colour
         public SettingsForm()
         {
             InitializeComponent();
-            comboBox_Language.Items.AddRange(langs.Keys.ToArray());
+            comboBox_Language.Items.AddRange(Hex2Colour.formats.Select(x => x.name).ToArray());
             comboBox_Language.SelectedIndex = 0;
             comboBox_Language.SelectedIndexChanged += comboBox_Language_SelectedIndexChanged;
+            Icon = Util.MakeTransparentIcon(Resource.icon);
         }
 
         public SettingsForm(Settings settings) : this()
@@ -227,7 +223,7 @@ namespace Hex2Colour
         private void comboBox_Language_SelectedIndexChanged(object sender, EventArgs e)
         {
             int index = comboBox_Language.SelectedIndex;
-            Value.LangApi = (LangsApis)index;// Enum.GetValues<Settings.LangsApis>()[index];
+            Value.LangApi = index;
         }
 
         private void textBox_NameFormat_TextChanged(object sender, EventArgs e)

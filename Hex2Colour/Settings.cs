@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
-using System.CodeDom;
-using System.Runtime.Serialization;
-
-namespace Hex2Colour
+﻿namespace Hex2Colour
 {
     public sealed class Settings : IEquatable<Settings>, ICloneable
     {
@@ -40,12 +31,12 @@ namespace Hex2Colour
 
         internal string? FileName { get; set; }
 
-        public LangsApis LangApi { get; set; } = LangsApis.C_GDI;
+        public int LangApi { get; set; }
         public bool SwapEndianess { get; set; } = true;
         public bool AlphaMSB { get; set; } = true;
         public bool AmericanSpelling { get; set; }
         public bool AddToClipboard { get; set; }
-        public bool GenerateArrays { get; set; }
+        public bool GenerateArrays { get; set; } = true;
 
         public bool AlwaysFormatName { get; set; }
 
@@ -112,7 +103,7 @@ namespace Hex2Colour
             uint version = br.ReadUInt32();
 
             Settings settings = new Settings();
-            settings.LangApi = (LangsApis)br.ReadInt32();
+            settings.LangApi = br.ReadInt32();
             settings.SwapEndianess = br.ReadBoolean();
             settings.AlphaMSB = br.ReadBoolean();
             settings.AmericanSpelling = br.ReadBoolean();

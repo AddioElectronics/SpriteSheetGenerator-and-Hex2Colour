@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SpriteSheetGenerator
+﻿namespace SpriteSheetGenerator
 {
     internal class ImagePath : IDisposable
     {
@@ -30,7 +24,7 @@ namespace SpriteSheetGenerator
         public ImagePath(Image image, string origFilename, RotateFlipType flipType)
         {
             this.image = image;
-            filename = Path.GetFileNameWithoutExtension(origFilename) + MainForm.rotateFlipNames[flipType];
+            filename = Path.GetFileNameWithoutExtension(origFilename) + SpriteSheetGeneratorForm.rotateFlipNames[flipType];
         }
 #pragma warning restore 8618
 

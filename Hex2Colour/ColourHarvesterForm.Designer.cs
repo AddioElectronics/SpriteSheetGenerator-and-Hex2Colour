@@ -85,6 +85,7 @@
             textBox_Text.Location = new Point(174, 42);
             textBox_Text.Multiline = true;
             textBox_Text.Name = "textBox_Text";
+            textBox_Text.PlaceholderText = "Paste text you want to parse here, or parse a URL and click Download.";
             textBox_Text.ScrollBars = ScrollBars.Both;
             textBox_Text.Size = new Size(1209, 652);
             textBox_Text.TabIndex = 4;
