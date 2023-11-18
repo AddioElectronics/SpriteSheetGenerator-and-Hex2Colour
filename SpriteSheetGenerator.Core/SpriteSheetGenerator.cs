@@ -53,23 +53,11 @@ namespace SpriteSheetGenerator
         /// </summary>
         /// <param name="bitmaps">Bitmaps to rotate</param>
         /// <param name="flipType">Type of rotation or mirroring.</param>
-        /// <returns>Array containing the rotated bitmaps.</returns>
+        /// <param name="format"><see cref="PixelFormat"/> of the generated bitmaps.</param>
+        /// <returns>Array containing the processed bitmaps.</returns>
         public static Bitmap[] RotateFlipBitmaps(Bitmap[] bitmaps, RotateFlipType flipType, PixelFormat format)
         {
-            int length = bitmaps.Length;
-            Bitmap[] rotated = new Bitmap[length];
-
-            for (int i = 0; i < length; i++)
-            {
-                Bitmap bm = bitmaps[i];
-
-                //Duplicate bitmap with the set pixel format
-                Bitmap rotate = new Bitmap(bm);
-
-                //Rotate
-                rotate.RotateFlip(flipType);
-            }
-            return rotated;
+            return bitmaps.Select(x => RotateFlipBitmap(x, flipType, format)).ToArray();
         }
 
         /// <summary>
@@ -77,10 +65,11 @@ namespace SpriteSheetGenerator
         /// </summary>
         /// <param name="bitmap">Bitmap to rotate</param>
         /// <param name="flipType">Type of rotation or mirroring.</param>
+        /// <param name="format"><see cref="PixelFormat"/> of the generated bitmap.</param>
         /// <returns>The processed bitmap.</returns>
         public static Bitmap RotateFlipBitmap(Bitmap bitmap, RotateFlipType flipType, PixelFormat format)
         {
-            //Duplicate bitmap with the set pixel format
+            //Duplicate bitmap with the selected pixel format
             Rectangle rect = new Rectangle(Point.Empty, bitmap.Size);
             Bitmap rotate = bitmap.Clone(rect, format);
 
@@ -96,7 +85,7 @@ namespace SpriteSheetGenerator
         /// <param name="format">Pixel format</param>
         /// <param name="flipTypes">Rotations and flips to apply.</param>
         /// <returns>An array containing the new variants.</returns>
-        public static Bitmap[] GenerateBitmapVariations(Bitmap bitmap, PixelFormat format, params RotateFlipType[] flipTypes)
+        public static Image[] GenerateBitmapVariations(Bitmap bitmap, PixelFormat format, params RotateFlipType[] flipTypes)
         {
             Bitmap[] variants = new Bitmap[flipTypes.Length];
 
@@ -109,13 +98,100 @@ namespace SpriteSheetGenerator
         }
 
         /// <inheritdoc cref="GenerateBitmapVariations(Bitmap, PixelFormat, RotateFlipType[])"/>
-        public static Bitmap[] GenerateBitmapVariations(Image image, PixelFormat format, params RotateFlipType[] flipTypes)
+        public static Image[] GenerateBitmapVariations(Image image, PixelFormat format, params RotateFlipType[] flipTypes)
         {
             return GenerateBitmapVariations(new Bitmap(image), format, flipTypes);
         }
 
         /// <summary>
-        /// Processes and combines all the bitmaps that were previously set via <see cref="SetImages(Image[], RotateFlipType[])"/>, or the constructor, into a single sprite sheet.
+        /// Combines all the pregrouped <paramref name="images"/> into a single sprite sheet.
+        /// </summary>
+        /// <remarks>
+        /// Each bitmap, along with any generated variation, are mapped to its own column(or row), in the order of the array.
+        /// This function is recommended if every sprite is the same size.
+        /// If you are combining bitmaps of various sizes, use <see cref="CreateSheetPacked"/> instead.
+        /// </remarks>
+        /// <param name="images">Pregrouped images to combine into a sprite sheet.</param>
+        /// <param name="alignVertically">Align image groups vertically.</param>
+        /// <param name="equalSpacing">Always space image variations equally.</param>
+        /// <param name="pixelFormat">
+        /// <see cref="PixelFormat"/> of the sprite sheet. 
+        /// Note: Must be a <see cref="PixelFormat"/> from <see cref="validPixelFormats"/>.
+        /// </param>
+        /// <returns>The sprite sheet image.</returns>
+        public static Image CreateSheet(List<Image>[] images, bool alignVertically, bool equalSpacing, PixelFormat pixelFormat)
+        {
+            var sprites = images.SelectMany(x => x).ToArray();
+
+            //Calculate columns, rows and size
+            int rows = images.Length;
+            int columns = sprites.Length / rows;
+
+            //Get size of each sprite group and calculate size of sprite sheet
+            List<GroupSize> setSizes = images.Select(x => GetBitmapSetSize(x)).ToList();
+            Size size = CalculateSheetSize(setSizes.ToArray(), alignVertically);
+
+            //Create the sheet bitmap
+            Bitmap sheet = new Bitmap(size.Width, size.Height, pixelFormat);
+
+            //Copy all the bitmaps onto the sheet
+            using (Graphics g = Graphics.FromImage(sheet))
+            {
+                g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBilinear;
+                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
+                g.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
+                g.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.AssumeLinear;
+
+                Point point = Point.Empty;  //Bitmap placement point
+
+                if (alignVertically)
+                {
+                    for (int groupId = 0; groupId < images.Length; groupId++)
+                    {
+                        List<Image> group = images[groupId];
+
+                        foreach (Image bm in group)
+                        {
+                            g.DrawImage(bm, point);
+                            point.Y += equalSpacing ?
+                              setSizes[groupId].maxSize.Height :
+                              bm.Height;
+                        }
+
+                        point.X += setSizes[groupId].maxSize.Width;
+                        point.Y = 0;
+                    }
+                }
+                else
+                {
+                    for (int groupId = 0; groupId < images.Length; groupId++)
+                    {
+                        List<Image> group = images[groupId];
+
+                        foreach (Image bm in group)
+                        {
+                            g.DrawImage(bm, point);
+                            point.X += equalSpacing ?
+                                setSizes[groupId].maxSize.Width :
+                                bm.Width;
+                        }
+
+                        point.X = 0;
+                        point.Y += setSizes[groupId].maxSize.Height;
+                    }
+                }
+
+
+
+                //Apply the graphics
+                g.Save();
+            }
+
+            return sheet;
+        }
+
+        /// <summary>
+        /// Processes and combines all <paramref name="images"/>, into a single sprite sheet.
         /// </summary>
         /// <remarks>
         /// Each bitmap, along with any generated variation, are mapped to its own column(or row), in the order of the array.
@@ -139,90 +215,14 @@ namespace SpriteSheetGenerator
                 throw new FormatException("Invalid pixel format. Can only use formats listed in validPixelFormats.");
             }
 
-            //Convert images to SpriteInfo types.
-            SpriteInfo[] originalSprites = GenerateOriginalSpriteInfos(images);
-
             //Generate variants and group them in separate lists.
-            List<List<SpriteInfo>> spriteGroups = BeginSheet(originalSprites, pixelFormat, rotateFlipTypes, out List<SpriteInfo> sprites);
+            List<Image>[] spriteGroups = BeginSheet(images, pixelFormat, rotateFlipTypes, out Image[] sprites);
 
-            //Calculate columns, rows and size
-            int rows = originalSprites.Length;
-            int columns = sprites.Count / rows;
-
-            Dictionary<int, GroupSize> setSizes = new Dictionary<int, GroupSize>();
-
-            for(int i = 0; i < originalSprites.Length; i++)
-                setSizes[i] = GetBitmapSetSize(spriteGroups[i]);
-
-            Size size = CalculateSheetSize(setSizes.Values.ToArray(), alignVertically);
-
-            //Create the sheet bitmap
-            Bitmap sheet = new Bitmap(size.Width, size.Height, pixelFormat);
-
-            //Copy all the bitmaps onto the sheet
-            using (Graphics g = Graphics.FromImage(sheet))
-            {
-                g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBilinear;
-                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
-                g.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
-                g.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.AssumeLinear;
-
-                int rowBase = 0;    //The current row's 0 index                
-
-                Point point = Point.Empty;
-
-                if (alignVertically)
-                {
-                    for(int groupId = 0; groupId < originalSprites.Length; groupId++)
-                    {
-                        List<SpriteInfo> group = spriteGroups[groupId];
-
-                        foreach (SpriteInfo sprite in group)
-                        {
-                            Bitmap bm = sprite.bitmap;
-
-                            g.DrawImage(bm, point);
-                            point.Y += equalSpacing ?
-                              setSizes[groupId].maxSize.Height :
-                              bm.Height;
-                        }
-
-                        point.X += setSizes[groupId].maxSize.Width;
-                        point.Y = 0;
-                    }                    
-                }
-                else
-                {
-                    for (int groupId = 0; groupId < originalSprites.Length; groupId++)
-                    {
-                        List<SpriteInfo> group = spriteGroups[groupId];
-
-                        foreach (SpriteInfo sprite in group)
-                        {
-                            Bitmap bm = sprite.bitmap;
-
-                            g.DrawImage(bm, point);
-                            point.X += equalSpacing ?
-                                setSizes[groupId].maxSize.Width :
-                                bm.Width;
-                        }
-
-                        point.X = 0;
-                        point.Y += setSizes[groupId].maxSize.Height;
-                    }
-                }
-
-
-
-                //Apply the graphics
-                g.Save();
-            }
-
-            return sheet;
+            return CreateSheet(spriteGroups, alignVertically, equalSpacing, pixelFormat);
         }
 
         /// <summary>
-        /// Processes, and packs, all the bitmaps that were previously set via <see cref="SetImages(Image[], RotateFlipType[])"/>, or the constructor, into a single sprite sheet.
+        /// Processes, and packs, all the <paramref name="images"/> into a single sprite sheet.
         /// </summary>
         /// <returns>The sprite sheet image.</returns>
         /// <param name="images">Images</param>
@@ -230,7 +230,7 @@ namespace SpriteSheetGenerator
         /// <see cref="PixelFormat"/> of the sprite sheet. 
         /// Note: Must be a <see cref="PixelFormat"/> from <see cref="validPixelFormats"/>.
         /// </param>
-        /// <param name="rotateFlipTypes">Types of rotations and mirroring to apply to <paramref name="images"/>.</param>
+        /// <param name="rotateFlipTypes">Optional types of rotations and mirroring to apply to <paramref name="images"/>.</param>
         /// <exception cref="ArgumentException">
         /// Will throw when too many packer runs out of room. 
         /// This is from the external library "RectanglePacker" and currently have no plans to fork.
@@ -243,14 +243,11 @@ namespace SpriteSheetGenerator
                 throw new FormatException("Invalid pixel format. Can only use formats listed in validPixelFormats.");
             }
 
-            //Convert images to SpriteInfo types.
-            SpriteInfo[] originalSprites = GenerateOriginalSpriteInfos(images);
-
             //Generate variants
-            BeginSheet(originalSprites, pixelFormat, rotateFlipTypes, out List<SpriteInfo> sprites);
+            BeginSheet(images, pixelFormat, rotateFlipTypes, out Image[] sprites);
 
             //Convert to IImageInfo for packer
-            IEnumerable<IImageInfo> bmpInfos = sprites;
+            IEnumerable<IImageInfo> bmpInfos = sprites.Select(x => new SpriteInfo(x));
 
             //Initialize the packer
             Canvas canvas = new Canvas();
@@ -289,38 +286,13 @@ namespace SpriteSheetGenerator
         #region Private
 
         /// <summary>
-        /// Convert an array of <see cref="Image"/>s to <see cref="SpriteInfo"/>s.
-        /// </summary>
-        /// <param name="images"></param>
-        /// <returns>Array of <see cref="SpriteInfo"/></returns>
-        static SpriteInfo[] GenerateOriginalSpriteInfos(Image[] images)
-        {
-            int index = 0;
-            return images.Select(x => new SpriteInfo(x, index++)).ToArray();
-
-            List<SpriteInfo> spriteInfos = new List<SpriteInfo>();
-            int id = 0;
-
-            foreach (var image in images)
-                spriteInfos.Add(new SpriteInfo(image, id++));
-
-            return spriteInfos.ToArray();
-        }
-
-        /// <summary>
         /// Adds the <paramref name="originalSprites"/> to their separate group list.
         /// </summary>
         /// <param name="originalSprites">The unprocessed images.</param>
         /// <returns>List containing each group list.</returns>
-        static List<List<SpriteInfo>> InitializeSpriteGroupLists(SpriteInfo[] originalSprites)
+        static List<Image>[] InitializeSpriteGroupLists(Image[] originalSprites)
         {
-            return originalSprites.Select(x => new List<SpriteInfo>() { x }).ToList();
-            List<List<SpriteInfo>> grouped = new List<List<SpriteInfo>>();
-
-            foreach (SpriteInfo si in originalSprites)
-                grouped.Add(new List<SpriteInfo>() { si });
-
-            return grouped;
+            return originalSprites.Select(x => new List<Image>() { x }).ToArray();
         }
 
         /// <summary>
@@ -330,17 +302,17 @@ namespace SpriteSheetGenerator
         /// <param name="rotateFlipTypes">Types of variations to generate.</param>
         /// <param name="sprites">List containing all sprites.</param>
         /// <returns>A list of all <paramref name="originalSprites"/> and generated sprites, separated in group lists.</returns>
-        static List<List<SpriteInfo>> BeginSheet(SpriteInfo[] originalSprites, PixelFormat pixelFormat, RotateFlipType[]? rotateFlipTypes, out List<SpriteInfo> sprites)
+        static List<Image>[] BeginSheet(Image[] originalSprites, PixelFormat pixelFormat, RotateFlipType[]? rotateFlipTypes, out Image[] sprites)
         {
             //Setup the sprites dictionary
-            List<List<SpriteInfo>>  groupedSprites = InitializeSpriteGroupLists(originalSprites);
+            List<Image>[]  groupedSprites = InitializeSpriteGroupLists(originalSprites);
 
             //Process the bitmaps
             if (rotateFlipTypes != null && rotateFlipTypes.Length > 0)
                 GenerateBitmapVariations(groupedSprites, pixelFormat, rotateFlipTypes);
 
             //Combine all bitmaps from sprites into a single array.
-            sprites = groupedSprites.SelectMany(x => x).ToList();
+            sprites = groupedSprites.SelectMany(x => x).ToArray();
             return groupedSprites;
         }
 
@@ -349,7 +321,7 @@ namespace SpriteSheetGenerator
         /// </summary>
         /// <param name="bitmaps">List of bitmaps that make up a column in the sprite sheet.</param>
         /// <returns>Size containing the largest bitmap width, and the sum of all the <paramref name="bitmaps"/> heights.</returns>
-        static GroupSize GetBitmapSetSize(List<SpriteInfo> bitmaps)
+        static GroupSize GetBitmapSetSize(List<Image> bitmaps)
         {
             int width = 0;      //Total width
             int height = 0;     //Total height
@@ -410,34 +382,6 @@ namespace SpriteSheetGenerator
         }
 
 
-        ///// <summary>
-        ///// Rotates the <paramref name="bitmaps"/> by <paramref name="flipType"/>, and returns an array of the generated bitmaps.
-        ///// </summary>
-        ///// <param name="bitmaps">Bitmaps to rotate</param>
-        ///// <param name="flipType">Type of rotation or mirroring.</param>
-        ///// <returns>Array containing the generated bitmaps.</returns>
-        //static SpriteInfo[] RotateBitmaps(SpriteInfo[] bitmaps, RotateFlipType flipType)
-        //{
-        //    int length = bitmaps.Length;
-        //    SpriteInfo[] rotated = new SpriteInfo[length];
-
-        //    for (int i = 0; i < length; i++)
-        //    {
-        //        Bitmap bm = bitmaps[i].bitmap;
-
-        //        //Duplicate bitmap with the set pixel format
-        //        Rectangle rect = new Rectangle(Point.Empty, bm.Size);
-        //        Bitmap rotate = new Bitmap(bm);
-
-        //        //Rotate
-        //        rotate.RotateFlip(flipType);
-
-        //        //Add to array
-        //        rotated[i] = new SpriteInfo(rotate, bitmaps[i].id, flipType);
-        //    }
-        //    return rotated;
-        //}
-
         /// <summary>
         /// Applies the <paramref name="rotateFlipTypes"/> to the <paramref name="originalSprites"/> and places them in <see cref="groupedSprites"/>.
         /// </summary>
@@ -447,35 +391,15 @@ namespace SpriteSheetGenerator
         /// </param>
         /// <param name="pixelFormat"><see cref="PixelFormat"/> of the generated bitmaps.</param>
         /// <param name="rotateFlipTypes">Types of rotations and mirrors to apply.</param>
-        static void GenerateBitmapVariations(List<List<SpriteInfo>> spriteGroups, PixelFormat pixelFormat, RotateFlipType[] rotateFlipTypes)
+        static void GenerateBitmapVariations(List<Image>[] spriteGroups, PixelFormat pixelFormat, RotateFlipType[] rotateFlipTypes)
         {
-            for (int i = 0, rftIndex = 0; i < spriteGroups.Count; i++, rftIndex = 0)
+            for (int i = 0; i < spriteGroups.Length; i++)
             {
                 //First index of the internal list contains the original bitmap
-                var bitmaps = GenerateBitmapVariations(spriteGroups[i][0].bitmap, pixelFormat, rotateFlipTypes);
-                var sprites = bitmaps.Select(x => new SpriteInfo(x, i, rotateFlipTypes[rftIndex++]));
-                spriteGroups[i].AddRange(sprites);
+                var bitmaps = GenerateBitmapVariations(spriteGroups[i][0], pixelFormat, rotateFlipTypes);
+                spriteGroups[i].AddRange(bitmaps);
             }
         }
-
-        ///// <summary>
-        ///// Applies the <paramref name="rotateFlipTypes"/> to the <paramref name="originalSprites"/> and places them in <see cref="groupedSprites"/>.
-        ///// </summary>
-        ///// <param name="originalSprites">Bitmaps to process</param>
-        ///// <param name="rotateFlipTypes">Types of rotations and mirrors to apply.</param>
-        ///// <param name="groupedSprites">List containing the group lists for the generated bitmaps to be added to.</param>
-        //static void GenerateBitmapVariations(SpriteInfo[] originalSprites, RotateFlipType[] rotateFlipTypes, List<List<SpriteInfo>> groupedSprites)
-        //{
-        //    foreach (RotateFlipType flipType in rotateFlipTypes)
-        //    {
-        //        //Rotate, place in dictionary, and set to source
-        //        SpriteInfo[] rotated = RotateBitmaps(originalSprites, flipType);
-
-        //        //Add modified bitmaps to their group list
-        //        foreach (SpriteInfo si in rotated)
-        //            groupedSprites[si.id].Add(si);
-        //    }
-        //}
 
         #endregion
 
